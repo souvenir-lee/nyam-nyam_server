@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "nodemone App.js",
+    "start": "nodemon App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,6 +22,10 @@
   },
   "homepage": "https://github.com/codestates/nyamnyam-server#readme",
   "devDependencies": {
+    "eslint": "^7.11.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "2.1.2",
     "typescript": "^4.0.3"
   },
   "dependencies": {
