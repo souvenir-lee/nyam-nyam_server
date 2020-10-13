@@ -1,5 +1,5 @@
 ---
-name: nyamnym issue template
+name: nyamnyam issue template
 about: issue template입니다.
 title: "[Group] where + issue"
 labels: ''
