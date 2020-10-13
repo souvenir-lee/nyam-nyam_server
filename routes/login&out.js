@@ -1,9 +1,9 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const logController = require("../controller/log");
+const logController = require('../controller/log');
 
-router.post("/login", logController.login.post);
-router.post("/logout", logController.logout.post);
+router.post('/login', logController.login.post);
+router.post('/logout', logController.logout.post);
 
 module.exports = router;
