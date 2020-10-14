@@ -19,3 +19,5 @@ https://medium.com/@jonghyun_park/sequelize-cli-%EC%82%BD%EC%A7%88%EA%B8%B0-colu
 2. 마이그레이션 파일이 만들어짐
 3. 만들어진 파일의 up부분에 코드를 넣음. 이때, 레퍼런스처럼 async가 아니라 포멀한 방식으로 작성하기
 4. 테이블 이름으로 인식하니 테이블 이름 참고하여 복수형으로 작성하기
+
+    //"typescript": "^4.0.3"
