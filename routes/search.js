@@ -3,8 +3,12 @@ const router = express.Router();
 
 const searchController = require('../controller/search');
 
-router.get('/search/:production', searchController.production.get);
-router.get('/search/:ingredient', searchController.ingredient.get);
-router.get('/search/:store', searchController.store.get);
+router.get("/:id", searchController.searchProduction.get);
+
+//후순위
+// router.get('/search/:ingredient', searchController.ingredient.get);
+// router.get('/search/:store', searchController.store.get);
+
+//&searchby=
 
 module.exports = router;
