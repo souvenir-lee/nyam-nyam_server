@@ -65,8 +65,8 @@ app.use('/managemenu', manageMenuRouter);
 app.use('/managestore', manageStoreRouter);
 app.use('/update', updateSalesRouter);
 
-app.listen(4000, () => {
-  console.log('server on 4000');
+app.listen(5000, () => {
+  console.log('server on 5000');
 });
 
 module.exports = app;
