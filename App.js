@@ -6,16 +6,16 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
 
-const usersRouter = require('./routes/users')
-//const socialRouter = require('./routes/social')  //여기는 소셜 로그인 작성되면 활성화하기
-const searchRouter = require('./routes/search')
-const predictRouter = require('./routes/predict')
-const trendRouter = require('./routes/trend')
-const infoRouter = require('./routes/info')
-const editInfoRouter = require('./routes/editInfo')
-const manageMenuRouter = require('./routes/manageMenu')
-const manageStoreRouter = require('./routes/manageStore')
-const updateSalesRouter = require('./routes/updateSales')
+const usersRouter = require('./routes/users');
+const socialRouter = require('./routes/social');
+const searchRouter = require('./routes/search');
+const predictRouter = require('./routes/predict');
+const trendRouter = require('./routes/trend');
+const infoRouter = require('./routes/info');
+const editInfoRouter = require('./routes/editInfo');
+const manageMenuRouter = require('./routes/manageMenu');
+const manageStoreRouter = require('./routes/manageStore');
+const updateSalesRouter = require('./routes/updateSales');
 
 const app = express();
 app.use(morgan('nyamnyam'));
@@ -55,7 +55,7 @@ app.use(
 // });
 
 app.use('/users', usersRouter);
-//app.use('/social', socialRouter);
+app.use('/social', socialRouter);
 app.use('/search', searchRouter);
 app.use('/predict', predictRouter);
 app.use('/trend', trendRouter);
