@@ -3,8 +3,8 @@ const router = express.Router();
 
 const manageStoreController = require("../controller/manageStore");
 
-router.get("/userinfo/mystore", manageStoreController.myStore.get);
-router.post("/userinfo/deletestroe", manageStoreController.deleteStore.post);
-router.post("/userinfo/addstore", manageStoreController.addStore.post);
+router.get("/mystore", manageStoreController.myStore.get);
+router.post("/deletestroe", manageStoreController.deleteStore.post);
+router.post("/addstore", manageStoreController.addStore.post);
 
 module.exports = router;
