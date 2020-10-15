@@ -3,9 +3,9 @@ const router = express.Router();
 
 const manageMenuController = require("../controller/manageMenu");
 
-router.get("/userinfo/mymenu", manageMenuController.myMenu.get);
-router.post("/userinfo/editmenu", manageMenuController.editMenu.post);
-router.post("/userinfo/addmenu", manageMenuController.addMenu.post);
-router.post("/userinfo/deletemenu", manageMenuController.deleteMenu.post);
+router.get("/mymenu", manageMenuController.myMenu.get);
+router.post("/editmenu", manageMenuController.editMenu.post);
+router.post("/addmenu", manageMenuController.addMenu.post);
+router.post("/deletemenu", manageMenuController.deleteMenu.post);
 
 module.exports = router;

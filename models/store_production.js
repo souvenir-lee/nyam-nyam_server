@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.store); //1:1 여기에 fk
+      this.belongsTo(models.production); //1:1 여기에 fk
+      this.hasMany(models.production_quantity); //1:N
     }
   };
   store_production.init({
@@ -18,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     productionId: DataTypes.INTEGER
   }, {
     sequelize,
+    createdAt: false,
+    updatedAt: false,
     modelName: 'store_production',
   });
   return store_production;

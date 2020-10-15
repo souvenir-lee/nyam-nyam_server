@@ -6,6 +6,17 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
 
+const usersRouter = require('./routes/users');
+const socialRouter = require('./routes/social');
+const searchRouter = require('./routes/search');
+const predictRouter = require('./routes/predict');
+const trendRouter = require('./routes/trend');
+const infoRouter = require('./routes/info');
+const editInfoRouter = require('./routes/editInfo');
+const manageMenuRouter = require('./routes/manageMenu');
+const manageStoreRouter = require('./routes/manageStore');
+const updateSalesRouter = require('./routes/updateSales');
+
 const app = express();
 app.use(morgan('nyamnyam'));
 app.use(bodyParser.json());
@@ -27,7 +38,7 @@ app.use(
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: 'session', //process.env.SESSION_SECRET,
     resave: false,
     rolling: true, // maxAge -> 갱신
     saveUninitialized: true,
@@ -38,12 +49,24 @@ app.use(
     },
   })
 );
-app.use('/', (req, res) => {
-  res.send('hello world');
-});
 
-app.listen(4000, () => {
-  console.log('server on 4000');
+// app.use('/', (req, res) => {
+//   res.send('hello world');
+// });
+
+app.use('/users', usersRouter);
+app.use('/social', socialRouter);
+app.use('/search', searchRouter);
+app.use('/predict', predictRouter);
+app.use('/trend', trendRouter);
+app.use('/info', infoRouter);
+app.use('/editinfo', editInfoRouter);
+app.use('/managemenu', manageMenuRouter);
+app.use('/managestore', manageStoreRouter);
+app.use('/update', updateSalesRouter);
+
+app.listen(5000, () => {
+  console.log('server on 5000');
 });
 
 module.exports = app;

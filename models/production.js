@@ -1,5 +1,7 @@
 'use strict';
-const { Model } = require('sequelize');
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class production extends Model {
     /**
@@ -9,20 +11,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.store_production); // 1:N
+      this.belongsTo(models.store); //1:1 여기에 fk
     }
-  }
-  production.init(
-    {
-      storeId: DataTypes.INTEGER,
-      productionName: DataTypes.STRING,
-      price: DataTypes.INTEGER,
-      info: DataTypes.STRING,
-      type: DataTypes.INTEGER,
+  };
+  production.init({
+    storeId: DataTypes.INTEGER,
+    productionName: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    {
-      sequelize,
-      modelName: 'production',
-    }
-  );
+    productionImg: DataTypes.STRING,
+    price: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    info: DataTypes.STRING,
+    dessertType: DataTypes.INTEGER,
+    type: {
+      type: DataTypes.INTEGER,
+      defaultValue : null,
+    },
+  }, {
+    sequelize,
+    createdAt: false,
+    updatedAt: false,
+    modelName: 'production',
+  });
   return production;
 };

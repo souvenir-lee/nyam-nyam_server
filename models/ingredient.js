@@ -11,12 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.production_ingredient); //1:N
     }
   };
   ingredient.init({
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }, {
     sequelize,
+    createdAt: false,
+    updatedAt: false,
     modelName: 'ingredient',
   });
   return ingredient;
