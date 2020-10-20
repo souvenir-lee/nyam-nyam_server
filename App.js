@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
 
+const authMiddleware =require('./middleware/auth')
+// const tokenMiddleware =require('./middleware/token')
 const usersRouter = require('./routes/users');
 const socialRouter = require('./routes/social');
 const searchRouter = require('./routes/search');
@@ -38,7 +40,7 @@ app.use(
 
 app.use(
   session({
-    secret: 'session', //process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     rolling: true, // maxAge -> 갱신
     saveUninitialized: true,
@@ -50,12 +52,20 @@ app.use(
   })
 );
 
-// app.use('/', (req, res) => {
-//   res.send('hello world');
-// });
+// app.use('*', authMiddleware)
+//app.use('/token', tokenMiddleware)
+
+// async function auth (req, res, next) {
+//   await authMiddleware(req)
+//   next()
+// }
 
 app.use('/users', usersRouter);
 app.use('/social', socialRouter);
+
+app.use('*', authMiddleware) //async(req, res, next) => {await authMiddleware next()})
+//왜 next()가 안될까
+
 app.use('/search', searchRouter);
 app.use('/predict', predictRouter);
 app.use('/trend', trendRouter);
