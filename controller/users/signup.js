@@ -1,9 +1,9 @@
 module.exports = {
   post: async (req, res) => {
-    const { user } = require('../../models');
+    const { user, store } = require('../../models');
     if (
       req.body === undefined ||
-      req.body.username === undefined ||
+      req.body.userName === undefined ||
       req.body.email === undefined ||
       req.body.password === undefined ||
       req.body.storeName === undefined ||
@@ -14,18 +14,49 @@ module.exports = {
       return res.status(400).send({ status: 'Invalid request' });
     }
     const {
-      username,
+      userName,
+      nickName,
       email,
       password,
       storeName,
       storeAddress,
       latitude,
       longitude,
+      userImg,
     } = req.body;
-    await user.findOrCreate({
-      raw: true,
-      where: { email: email },
-      defaults: { username: username, password: password },
-    });
+    console.log(req.body);
+
+    try {
+      await user.create({
+        email: email,
+        password: password,
+        username: userName,
+        nickname: nickName,
+        userImg: userImg,
+      });
+      await user.findOne({});
+    } catch (err) {
+      console.log(err);
+    }
   },
 };
+
+// default: {
+//   email: email,
+//   password: password,
+//   username: userName,
+//   nickname: nickName,
+//   userImg: userImg,
+//   access_token: null,
+//   refresh_token: null,
+//   social: null,
+//   store: {
+//     storeName: storeName,
+//     storeAddress: storeAddress,
+//     latitude: latitude,
+//     longitude: longitude,
+//   },
+// },
+// {
+//   include: [store],
+// }

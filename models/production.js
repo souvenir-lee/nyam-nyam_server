@@ -2,25 +2,40 @@
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class production extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      this.belongsToMany(models.store, {
+        through: 'store_production',
+        foreignKey: 'productionId',
+      }); //N:M 한 스토어에 여러 상품, 한 상품이 여러 가게에
+      this.belongsToMany(models.ingredient, {
+        through: 'production_ingredient',
+        foreignKey: 'productionId',
+      }); //N:M 한 상품에 여러 재료, 한 재료가 여러 상품에
     }
   }
   production.init(
     {
       storeId: DataTypes.INTEGER,
-      productionName: DataTypes.STRING,
-      price: DataTypes.INTEGER,
+      productionName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      productionImg: DataTypes.STRING,
+      price: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       info: DataTypes.STRING,
-      type: DataTypes.INTEGER,
+      dessertType: DataTypes.INTEGER,
+      type: {
+        type: DataTypes.INTEGER,
+        defaultValue: null,
+      },
     },
     {
       sequelize,
+      createdAt: false,
+      updatedAt: false,
       modelName: 'production',
     }
   );

@@ -1,24 +1,27 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class production_ingredient extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.production, {
+        foreignKey: 'productionId',
+      }); //production과 ingredient의 공통테이블
+      this.belongsTo(models.ingredient, {
+        foreignKey: 'ingredientId',
+      }); //production과 ingredient의 공통테이블
     }
-  };
-  production_ingredient.init({
-    productionId: DataTypes.INTEGER,
-    ingredientId: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'production_ingredient',
-  });
+  }
+  production_ingredient.init(
+    {
+      productionId: DataTypes.INTEGER,
+      ingredientId: DataTypes.INTEGER,
+    },
+    {
+      sequelize,
+      createdAt: false,
+      updatedAt: false,
+      modelName: 'production_ingredient',
+    }
+  );
   return production_ingredient;
 };

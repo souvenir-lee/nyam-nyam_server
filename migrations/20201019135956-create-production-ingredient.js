@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("production_ingredients", {
+    await queryInterface.createTable('production_ingredients', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,29 +10,29 @@ module.exports = {
       },
       productionId: {
         type: Sequelize.INTEGER,
+        constraints: false,
+        onDelete: 'cascade',
         references: {
-          model: "productions",
-          key: "id",
+          model: {
+            tableName: 'productions',
+          },
+          key: 'id',
         },
       },
       ingredientId: {
         type: Sequelize.INTEGER,
+        constraints: false,
+        onDelete: 'cascade',
         references: {
-          model: "ingredients",
-          key: "id",
+          model: {
+            tableName: 'ingredients',
+          },
+          key: 'id',
         },
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
       },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("production_ingredients");
+    await queryInterface.dropTable('production_ingredients');
   },
 };
