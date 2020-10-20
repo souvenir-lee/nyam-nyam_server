@@ -1,118 +1,194 @@
 module.exports = {
-  post: (req, res) => {
+  post: async(req, res) => {
     const { user } = require('../../models');
-    const { v4 } = require('uuid')
-    const jwt = require('jsonwebtoken')
-    const crypto = require('crypto')
+    const jwt = require('jsonwebtoken');
+    const { v4 } = require('uuid');
+    const uuidNew = await v4();
+    const authMiddleware =require('../../middleware/auth')
+    const { email, password } = req.body;
 
-    console.log('login 들어왔음', typeof user)
-    /*
-    (프론트 측에서 구현하는 자동로그인의 경우는 일단 제외하기)
-    1. 해당 이메일, 비번이 있는지 확인한다(sequelize findOne)
-        1-1. 전달된 정보가 없으면 400
-        1-1. 정확한 정보가 아니라면 404 Invalid request
-    2. 해당 정보가 있으면
-    3. access, refresh token을 부여한다. 
-        access token은 30분이 완료인가? 일단 이것도 30분 기준으로 만들어두고 변경하면서 확인해보자
-    4. access token이 만료되어 다시 요청이 들어오면, refresh token을 통해 확인한다.
-    5. refresh token도 만료가 되면 인증 과정(은 어떤것?)을 통해 재발급 한다.
-        refresh token은 로그인을 하지 않을 일자를 기준으로 1주일이 지나면 하는 것으로 하는 건 어떨까?
-    */
-
-    //1-1. 전달된 정보가 없으면 400
-    if(
-      req.body === undefined || 
-      req.body.email === undefined || 
-      req.body.password === undefined) {
-        return res.status(400).send({stats: 'Invalid Request'});
+    if (
+      req.body === undefined ||
+      email === undefined ||
+      password === undefined
+    ) {
+      return res.status(400).send('유효하지 않은 요청입나다.');
     }
 
-    const { email, password } = req.body
-    const uuidNew = v4();
-
-    //access token 만들어 응답하는 콜백 함수
-    const generateAccess = (userData) => {
-      const payload = {account : email, uuid: uuidNew, gmt: Date.now()} //uuid: uuidNew,
-      const secert = process.env.ACCESS_SECRET;
-      const option = {
-        expiresIn : '5m',
-        issuer : 'nyam-nyamServer',
-      };
-      jwt.sign(payload, secert, option, (err, token) => {
-        if(err) console.log(err);
-        else{
-          userData['password'] ? delete userData['password'] : false;
-          userData['token'] ? delete userData['token'] : false;
-          return res.status(200).json({
-            userData : userData,
-            token : token,
-            stauts : 'Login Complete'
-          })
-        }
-      })
-    }
-
-    //generateAccess(req.body);
-
-    //1. 해당 이메일, 비번이 있는지 확인한다(sequelize findOne)
-    //1-1. 정확한 정보가 아니라면 404 Invalid request
-    user
-      .findOne({
-        raw: true,
-        where : {
-          email : email,
-          password : password
-        }
-      })
-      .then((data) => {
-        if (data === null) {
-          return res.status(404).send({status : "Invalid Request"})
-        } else {
-          //refreshIoken 발행
-          //근데 여기에 넣으면 access랑 차이가 뭐지?
-          const refreshToken = data.token
-          if(refreshToken === null) {
-            let secret = process.env.REFRESH_SECRET;
-            let hash = crypto
-              .createHmac('sha256', secret)
-              .update(
-                String(data.email) +
-                  Date().split(' ')[1] +
-                  Date().split(' ')[4]
-              )
-              .digest('hex');
-
-            user 
-              .update(
-                { token : hash,
-                  updateAt: Date.now()
-                },
-                { where : { email : email} }
-              )
-              .then((update) => {
-                if(update !== 0) {
-                  console.log('refreshToken update')
-
-                  user
-                  .findOne({
-                    raw: true,
-                    where: { email : email},
-                  })
-                  .then((userdata) => generateAccess(userdata))
-                  .catch(err => res.status(500).send(err))
-                } else {
-                    console.log('refreshToken update err')
-                }
+    const check = (user) => {
+      if(user) {
+        if(user.refresh_token === null) {
+          const access = new Promise((resolve, reject) => {
+            jwt.sign(
+              { account : email, gmt: Date.now() }, 
+              process.env.ACCESS_SECRET, 
+              {
+                expiresIn : '15m',
+                issuer : 'nyam-nyamServer',
+              }, (err, token) => {
+                if (err) reject(err)
+                resolve(token) 
               })
-          } else {
-            generateAccess(data);
-          }
-        }
+          })
+          return access
+        } 
+        console.log('토큰이 있습니다.')
+        //authMiddleware(req)
+        return res.status(401).send('토큰이 있습니다.')
+      }
+      console.log('user 정보가 없습니다')
+      return res.status(404).send('user 정보가 없습니다')
+    }
+
+    const respond = (token) => {
+      let refresh_token = uuidNew
+      user.update({ access_token : token, refresh_token : refresh_token }, { where : { email : email } })
+        .then(() => {
+          console.log('update', token)
+          let result = {access_token:token, refresh_token:refresh_token}
+          return result
+        })
+        .then((token)  =>  {
+          console.log('업뎃후 token', token)
+          user.findOne({
+            attributes: { exclude: [ "password","createdAt","updatedAt"] },
+            where : { email : email }
+          })
+          .then((userdata) => {
+            return res.json({
+              message: 'logged in successfully',
+              userdata
+          })
+        })
+        .catch(err => console.log(err))
       })
-      .catch((err) => {
-        console.log('유저를 못찾은 것 같음', err)
-        return res.status(500).send(err)
-      })
+    }
+
+    user.findOne({
+      attributes: { exclude: [ "password","createdAt","updatedAt"] },
+      where : { email : email }
+    })
+    .then(check)
+    .then(respond)
+    .catch((err) => console.log('login error',err))
   }
-};
+}
+
+// module.exports = {
+//   post: async (req, res) => {
+//     const { user } = require('../../models');
+//     const { v4 } = require('uuid')
+//     const jwt = require('jsonwebtoken')
+
+//     console.log('login 들어왔음', typeof user)
+
+//     if(
+//       req.body === undefined || 
+//       req.body.email === undefined || 
+//       req.body.password === undefined) {
+//         return res.status(400).send({stats: 'Invalid Request'});
+//     }
+
+//     const { email, password } = req.body
+//     //const uuidNew = await v4();
+
+//     //access token 만들어 응답하는 콜백 함수
+//     const generateToken = (userData) => {
+//       const payload = {account : email, gmt: Date.now()} //uuid: uuidNew,
+//       const secert = process.env.ACCESS_SECRET;
+//       const option = {
+//         expiresIn : '15m',
+//         issuer : 'nyam-nyamServer',
+//       };
+//       jwt.sign(payload, secert, option, (err, token) => {
+//         if(err) console.log(err);
+//         else{
+//           //userData['token'] ? delete userData['token'] : false;  
+//           console.log('access userdata')
+//           user.update({access_token: token}, {where: {email : email} } )
+//             .then(() => {
+//               console.log('access_token', token)
+//               generateRefresh(userData)
+//             })
+//             .catch(err => {
+//               console.log('access token 발행 문제')
+//             })
+//         }
+//       })
+//     }
+
+//     //refresh token 만들어 응답하는 콜백 함수
+//     const generateRefresh = (userData) => {
+//       const payload = {account : email} //uuid: uuidNew,
+//       const secert = process.env.REFRESH_SECRET;
+//       const option = {
+//         expiresIn : '14d',
+//         issuer : 'nyam-nyamServer',
+//       };
+//       jwt.sign(payload, secert, option, (err, token) => {
+//         if(err) console.log(err);
+//         else{
+//           //userData['token'] ? delete userData['token'] : false;
+//           console.log('refresh 안에서')
+//           user.update({refresh_token: token}, {where :{email : email}})
+//             .then((userdata) => {
+//               console.log('refresh_token', token)
+//               console.log('refresh', userdata)
+//               return res.status(200).json({
+//                 userdata,
+//                 stauts : 'Login Complete'
+//               })
+//             })
+//             .catch(err => {
+//               console.log('refrsh token 발행 문제',err)
+//             })
+//         }
+//       })
+//     }
+
+//     await user
+//       .findOne({
+//         raw: true,
+//         where : {
+//           email : email,
+//           password : password
+//         }
+//       })
+//       .then(async(data) => {
+//         if (data === null) {
+//           return res.status(404).send({status : "Invalid Request"})
+//         } else {
+//           //console.log(data)
+//            const refreshToken = data.refresh_token;           
+//            if (refreshToken !== null) {
+//             return data;
+//           } else {
+//             //access token이 있다면
+//             //액세스 토큰 확인하여 자동로그인으로 메인페이지 연결?
+//             console.log('로그인을 한 상태입니다')
+//             return res.send('로그인을 한 상태입니다')
+//           }
+//         }
+//       })
+//       .catch((err) => {
+//         console.log('유저를 못찾은 것 같음, 혹은 로직문제', err)
+//         return res.status(500).send(err)
+//       })
+
+//     await user
+//       .findOne({
+//         raw: true,
+//         attributes: { exclude: [ "password","createdAt","updatedAt"] },
+//         where: { email : email }
+//       })  
+//       .then((userdata) => {
+//         console.log('여기도 결국',userdata)
+//         generateAccess(userdata)
+//       })
+//       .catch(err => {
+//         console.log('login 두번째 find',err)
+//         return res.status(500).send(err)
+//       })
+//   }
+// };
   
