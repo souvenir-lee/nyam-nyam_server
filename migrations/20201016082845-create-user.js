@@ -1,53 +1,52 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('stores', {
+    await queryInterface.createTable('users', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      userId: {
         type: Sequelize.INTEGER,
-        constraints: false,
-        onDelete: 'cascade',
-        references: {
-          model: {
-            tableName: 'users',
-          },
-          key: 'id',
-        },
       },
-      storeName: {
+      email: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      storeAddress: {
+      password: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      latitude: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+      username: {
+        type: Sequelize.STRING,
       },
-      longitude: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+      nickname: {
+        type: Sequelize.STRING,
+      },
+      userImg: {
+        type: Sequelize.STRING,
+      },
+      access_token: {
+        type: Sequelize.STRING,
+      },
+      refresh_token: {
+        type: Sequelize.STRING,
+      },
+      social: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         type: 'TIMESTAMP',
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
       },
       updatedAt: {
         type: 'TIMESTAMP',
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
-      }
+        allowNull: false,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('stores');
-  }
+    await queryInterface.dropTable('users');
+  },
 };

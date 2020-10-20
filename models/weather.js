@@ -1,29 +1,29 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class weather extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
-      this.hasMany(models.production_quantity); //1:N
+      this.hasOne(models.production_quantity, {
+        foreignKey: 'weatherId',
+      }); //1:1
     }
-  };
-  weather.init({
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  }
+  weather.init(
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      icon: {
+        type: DataTypes.STRING,
+      },
     },
-  }, {
-    sequelize,
-    createdAt: false,
-    updatedAt: false,
-    modelName: 'weather',
-  });
+    {
+      sequelize,
+      createdAt: false,
+      updatedAt: false,
+      modelName: 'weather',
+    }
+  );
   return weather;
 };
