@@ -1,48 +1,53 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('productions', {
+    await queryInterface.createTable('stores', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
-      storeId: {
+      userId: {
         type: Sequelize.INTEGER,
         constraints: false,
         onDelete: 'cascade',
         references: {
           model: {
-            tableName: 'stores',
+            tableName: 'users',
           },
           key: 'id',
         },
       },
-      productionName: {
+      storeName: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      productionImg: {
+      storeAddress: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
-      price: {
+      latitude: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      info: {
-        type: Sequelize.STRING,
-      },
-      dessertType: {
+      longitude: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
-      type: {
-        type: Sequelize.INTEGER,
-        defaultValue: null,
+      createdAt: {
+        type: 'TIMESTAMP',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+      },
+      updatedAt: {
+        type: 'TIMESTAMP',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
       },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('productions');
-  }
+    await queryInterface.dropTable('stores');
+  },
 };

@@ -3,15 +3,10 @@ const { Model } = require('sequelize');
 const crypto = require('crypto');
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      this.hasMany(models.store) //1:N
+      this.hasMany(models.store, { foreignKey: 'userId' }); //1:N 한 유저에 여러가게
     }
-  };
+  }
   user.init(
     {
       email: {
@@ -25,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       username: DataTypes.STRING,
       nickname: DataTypes.STRING,
       userImg: DataTypes.STRING,
-      token: DataTypes.STRING,
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
@@ -35,8 +29,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
-      }
-    }, 
+      },
+      access_token: DataTypes.STRING,
+      refresh_token: DataTypes.STRING,
+      social: DataTypes.STRING,
+    },
     {
       hooks: {
         beforeCreate: (data, options) => {
@@ -56,11 +53,12 @@ module.exports = (sequelize, DataTypes) => {
               .digest('hex');
             data.where.password = hash;
           }
-        }
+        },
       },
-    sequelize,
-    timestamps: true,
-    modelName: 'user',
-  });
+      sequelize,
+      timestamps: true,
+      modelName: 'user',
+    }
+  );
   return user;
 };
