@@ -4,11 +4,16 @@
 
 npx sequelize-cli model:generate --name user --attributes email:string,password:string,username:string,nickname:string,userImg:string,access_token:string,refresh_token:string,social:string
 npx sequelize-cli model:generate --name store --attributes userId:INTEGER,storeName:string,storeAddress:string,latitude:INTEGER,longitude:INTEGER
+
 npx sequelize-cli model:generate --name production --attributes storeId:INTEGER,productionName:string,productionImg:string,price:INTEGER,info:string,dessertType:INTEGER,type:INTEGER
+
 npx sequelize-cli model:generate --name ingredient --attributes name:string
+
 npx sequelize-cli model:generate --name weather --attributes name:string
 npx sequelize-cli model:generate --name store_production --attributes storeId:INTEGER,productionId:INTEGER
+
 npx sequelize-cli model:generate --name production_ingredient --attributes productionId:INTEGER,ingredientId:INTEGER
+
 npx sequelize-cli model:generate --name production_quantity --attributes store_productionId:INTEGER,date:date,quantity:INTEGER,weatherId:INTEGER
 
 #### add-column 방법 reference
