@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
 
-const authMiddleware =require('./middleware/auth')
+const authMiddleware = require('./middleware/auth');
 // const tokenMiddleware =require('./middleware/token')
 const usersRouter = require('./routes/users');
 const socialRouter = require('./routes/social');
@@ -63,7 +63,7 @@ app.use(
 app.use('/users', usersRouter);
 app.use('/social', socialRouter);
 
-app.use('*', authMiddleware) //async(req, res, next) => {await authMiddleware next()})
+app.use('*', authMiddleware); //async(req, res, next) => {await authMiddleware next()})
 //왜 next()가 안될까
 
 app.use('/search', searchRouter);

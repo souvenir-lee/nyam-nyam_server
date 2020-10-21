@@ -24,39 +24,36 @@ module.exports = {
       longitude,
       userImg,
     } = req.body;
-    console.log(req.body);
+    console.log('유저', req.body);
 
     try {
-      await user.create({
+      const createUser = await user.create({
         email: email,
         password: password,
         username: userName,
         nickname: nickName,
         userImg: userImg,
       });
-      await user.findOne({});
+      const findUserId = await user.findOne({
+        where: {
+          email: email,
+        },
+      });
+
+      const createStore = await store.create({
+        userId: findUserId.dataValues.id,
+        storeName: storeName,
+        storeAddress: storeAddress,
+        latitude: latitude,
+        longitude: longitude,
+      });
+      console.log('유저부분', createUser);
+      console.log('유저아이디찾자', findUserId.dataValues.id);
+      console.log('가게부분', createStore);
+      res.status(200).send('회원가입이 완료되었습니다.');
     } catch (err) {
       console.log(err);
+      res.status(401).send('Bad Request');
     }
   },
 };
-
-// default: {
-//   email: email,
-//   password: password,
-//   username: userName,
-//   nickname: nickName,
-//   userImg: userImg,
-//   access_token: null,
-//   refresh_token: null,
-//   social: null,
-//   store: {
-//     storeName: storeName,
-//     storeAddress: storeAddress,
-//     latitude: latitude,
-//     longitude: longitude,
-//   },
-// },
-// {
-//   include: [store],
-// }

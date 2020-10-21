@@ -1,10 +1,10 @@
 module.exports = {
-  post: async(req, res) => {
+  post: async (req, res) => {
     const { user } = require('../../models');
     const jwt = require('jsonwebtoken');
     const { v4 } = require('uuid');
     const uuidNew = await v4();
-    const authMiddleware =require('../../middleware/auth')
+    const authMiddleware = require('../../middleware/auth');
     const { email, password } = req.body;
 
     if (
@@ -16,63 +16,71 @@ module.exports = {
     }
 
     const check = (user) => {
-      if(user) {
-        if(user.refresh_token === null) {
+      if (user) {
+        if (user.refresh_token === null) {
           const access = new Promise((resolve, reject) => {
             jwt.sign(
-              { account : email, gmt: Date.now() }, 
-              process.env.ACCESS_SECRET, 
+              { account: email, gmt: Date.now() },
+              process.env.ACCESS_SECRET,
               {
-                expiresIn : '15m',
-                issuer : 'nyam-nyamServer',
-              }, (err, token) => {
-                if (err) reject(err)
-                resolve(token) 
-              })
-          })
-          return access
-        } 
-        console.log('토큰이 있습니다.')
+                expiresIn: '15m',
+                issuer: 'nyam-nyamServer',
+              },
+              (err, token) => {
+                if (err) reject(err);
+                resolve(token);
+              }
+            );
+          });
+          return access;
+        }
+        console.log('토큰이 있습니다.');
         //authMiddleware(req)
-        return res.status(401).send('토큰이 있습니다.')
+        return res.status(401).send('토큰이 있습니다.');
       }
-      console.log('user 정보가 없습니다')
-      return res.status(404).send('user 정보가 없습니다')
-    }
+      console.log('user 정보가 없습니다');
+      return res.status(404).send('user 정보가 없습니다');
+    };
 
     const respond = (token) => {
-      let refresh_token = uuidNew
-      user.update({ access_token : token, refresh_token : refresh_token }, { where : { email : email } })
+      let refresh_token = uuidNew;
+      user
+        .update(
+          { access_token: token, refresh_token: refresh_token },
+          { where: { email: email } }
+        )
         .then(() => {
-          console.log('update', token)
-          let result = {access_token:token, refresh_token:refresh_token}
-          return result
+          console.log('update', token);
+          let result = { access_token: token, refresh_token: refresh_token };
+          return result;
         })
-        .then((token)  =>  {
-          console.log('업뎃후 token', token)
-          user.findOne({
-            attributes: { exclude: [ "password","createdAt","updatedAt"] },
-            where : { email : email }
-          })
-          .then((userdata) => {
-            return res.json({
-              message: 'logged in successfully',
-              userdata
-          })
-        })
-        .catch(err => console.log(err))
-      })
-    }
+        .then((token) => {
+          // console.log('업뎃후 token', token)
+          user
+            .findOne({
+              attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
+              where: { email: email },
+            })
+            .then((userdata) => {
+              return res.json({
+                message: 'logged in successfully',
+                userdata,
+              });
+            })
+            .catch((err) => console.log(err));
+        });
+    };
 
-    user.findOne({
-      attributes: { exclude: [ "password","createdAt","updatedAt"] },
-      where : { email : email }
-    })
-    .then(check)
-    .then(respond)
-    .catch((err) => console.log('login error',err))
-  }
-}
+    user
+      .findOne({
+        attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
+        where: { email: email },
+      })
+      .then(check)
+      .then(respond)
+      .catch((err) => console.log('login error', err));
+  },
+};
 
 // module.exports = {
 //   post: async (req, res) => {
@@ -83,8 +91,8 @@ module.exports = {
 //     console.log('login 들어왔음', typeof user)
 
 //     if(
-//       req.body === undefined || 
-//       req.body.email === undefined || 
+//       req.body === undefined ||
+//       req.body.email === undefined ||
 //       req.body.password === undefined) {
 //         return res.status(400).send({stats: 'Invalid Request'});
 //     }
@@ -103,7 +111,7 @@ module.exports = {
 //       jwt.sign(payload, secert, option, (err, token) => {
 //         if(err) console.log(err);
 //         else{
-//           //userData['token'] ? delete userData['token'] : false;  
+//           //userData['token'] ? delete userData['token'] : false;
 //           console.log('access userdata')
 //           user.update({access_token: token}, {where: {email : email} } )
 //             .then(() => {
@@ -159,7 +167,7 @@ module.exports = {
 //           return res.status(404).send({status : "Invalid Request"})
 //         } else {
 //           //console.log(data)
-//            const refreshToken = data.refresh_token;           
+//            const refreshToken = data.refresh_token;
 //            if (refreshToken !== null) {
 //             return data;
 //           } else {
@@ -180,7 +188,7 @@ module.exports = {
 //         raw: true,
 //         attributes: { exclude: [ "password","createdAt","updatedAt"] },
 //         where: { email : email }
-//       })  
+//       })
 //       .then((userdata) => {
 //         console.log('여기도 결국',userdata)
 //         generateAccess(userdata)
@@ -191,4 +199,3 @@ module.exports = {
 //       })
 //   }
 // };
-  
