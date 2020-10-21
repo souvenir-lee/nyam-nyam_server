@@ -7,15 +7,22 @@ const tokenMiddleware = (req, res, next) => {
   const refresh_token =
     req.headers['x-refresh-token'] || req.query.refresh_token;
 
-  //auth에서 엑세스토큰이 없으면
-  //리프레시가 있는지 확인후
-  //엑세스 토큰을 업데이트하기
-  //리프레시도 없으면 다시 로그인하도록 하기
-
-  if (refresh_token === null || access_token === null) {
-    console.log('refresh token 만료입니다');
-    return res.redirect('/login');
-  }
+	if(
+		refresh_token === null ||
+		access_token === null
+	) {
+		console.log('refresh token 만료입니다')
+		return res.redirect('/login')
+	} else {
+		if(req.body.social === 'kakao') {
+			user.findOne({ where : { refresh_token : refresh_token } })
+				.then(data => data)
+				.catch(err => {
+					console.log('소셜 로그인 정보를 못찾았습니다.', err)
+					return res.status(500).json('소셜 로그인 정보를 못찾았습니다.', err)
+				})
+		}
+	}
 
   const generateAccess = (user) => {
     if (user) {
