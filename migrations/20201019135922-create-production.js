@@ -8,17 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      storeId: {
-        type: Sequelize.INTEGER,
-        constraints: false,
-        onDelete: 'cascade',
-        references: {
-          model: {
-            tableName: 'stores',
-          },
-          key: 'id',
-        },
-      },
       productionName: {
         type: Sequelize.STRING,
         allowNull: false,

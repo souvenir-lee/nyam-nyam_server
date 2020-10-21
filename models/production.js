@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   production.init(
     {
-      storeId: DataTypes.INTEGER,
       productionName: {
         type: DataTypes.STRING,
         allowNull: false,

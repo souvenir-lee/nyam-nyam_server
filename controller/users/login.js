@@ -1,10 +1,9 @@
 module.exports = {
-  post: async(req, res) => {
+  post: async(req, res, next) => {
     const { user } = require('../../models');
     const jwt = require('jsonwebtoken');
     const { v4 } = require('uuid');
     const uuidNew = await v4();
-    const authMiddleware =require('../../middleware/auth')
     const { email, password } = req.body;
 
     if (
@@ -33,7 +32,7 @@ module.exports = {
           return access
         } 
         console.log('토큰이 있습니다.')
-        //authMiddleware(req)
+        //authMiddleware(req,res,next)
         return res.status(401).send('토큰이 있습니다.')
       }
       console.log('user 정보가 없습니다')
