@@ -1,28 +1,25 @@
 const jwt = require('jsonwebtoken');
 const { user } = require('../models');
-
 const tokenMiddleware = (req, res, next) => {
   console.log(req.headers);
   const access_token = req.headers['x-access-token'] || req.query.access_token;
   const refresh_token =
     req.headers['x-refresh-token'] || req.query.refresh_token;
 
-	if(
-		refresh_token === null ||
-		access_token === null
-	) {
-		console.log('refresh token 만료입니다')
-		return res.redirect('/login')
-	} else {
-		if(req.body.social === 'kakao') {
-			user.findOne({ where : { refresh_token : refresh_token } })
-				.then(data => data)
-				.catch(err => {
-					console.log('소셜 로그인 정보를 못찾았습니다.', err)
-					return res.status(500).json('소셜 로그인 정보를 못찾았습니다.', err)
-				})
-		}
-	}
+  if (refresh_token === null || access_token === null) {
+    console.log('refresh token 만료입니다');
+    return res.redirect('/login');
+  } else {
+    if (req.body.social === 'kakao') {
+      user
+        .findOne({ where: { refresh_token: refresh_token } })
+        .then((data) => data)
+        .catch((err) => {
+          console.log('소셜 로그인 정보를 못찾았습니다.', err);
+          return res.status(500).json('소셜 로그인 정보를 못찾았습니다.', err);
+        });
+    }
+  }
 
   const generateAccess = (user) => {
     if (user) {

@@ -2,7 +2,7 @@
 const { Model } = require('sequelize');
 const crypto = require('crypto');
 const dotenv = require('dotenv');
-dotenv.config({ path: './.env' });
+require('dotenv').config();
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
     static associate(models) {

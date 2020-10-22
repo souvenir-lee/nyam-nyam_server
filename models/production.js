@@ -1,7 +1,5 @@
 'use strict';
 const { Model } = require('sequelize');
-const dotenv = require('dotenv');
-dotenv.config({ path: './.env' });
 module.exports = (sequelize, DataTypes) => {
   class production extends Model {
     static associate(models) {
