@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+require('dotenv').config();
 module.exports = {
   post: async (req, res) => {
     const { user } = require('../../models');
