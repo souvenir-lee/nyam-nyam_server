@@ -1,7 +1,5 @@
 const jwt = require('jsonwebtoken');
 const { user } = require('../models');
-const dotenv = require('dotenv');
-require('dotenv').config();
 const tokenMiddleware = (req, res, next) => {
   console.log(req.headers);
   const access_token = req.headers['x-access-token'] || req.query.access_token;

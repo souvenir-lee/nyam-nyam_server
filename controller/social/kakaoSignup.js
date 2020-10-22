@@ -5,8 +5,6 @@ const qs = require('qs');
 const dotenv = require('dotenv');
 require('dotenv').config();
 const session = require('express-session');
-// const { token } = require('morgan');
-// const emailConfirm = require('../users/emailConfirm');
 
 module.exports = {
   get: async (req, res) => {

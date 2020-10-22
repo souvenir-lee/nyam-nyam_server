@@ -3,6 +3,7 @@ require('dotenv').config();
 module.exports = {
   post: async (req, res) => {
     const { user } = require('../../models');
+    const { store } = require('../../models');
     const jwt = require('jsonwebtoken');
     const { v4 } = require('uuid');
     const uuidNew = await v4();
@@ -63,10 +64,28 @@ module.exports = {
               attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
               where: { email: email },
             })
-            .then((userdata) => {
+            .then(async (userdata) => {
+              let { id } = userdata
+              console.log(id)
+              let storedata = 
+                await store.findAll({
+                  //attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
+                  where : { userId : id}
+                })
+                .then(data => {
+                  let result = []
+                  let storeArr = data.map(e => {
+                    result = e.dataValues
+                    return result
+                  })
+                  return storeArr
+                })
+                .catch(err => console.log(err))
+
               return res.json({
                 message: 'logged in successfully',
                 userdata,
+                storedata
               });
             })
             .catch((err) => console.log(err));

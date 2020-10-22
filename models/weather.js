@@ -1,6 +1,5 @@
 'use strict';
 const { Model } = require('sequelize');
-const dotenv = require('dotenv');
 module.exports = (sequelize, DataTypes) => {
   class weather extends Model {
     static associate(models) {
