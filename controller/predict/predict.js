@@ -1,74 +1,96 @@
 module.exports = {
 	get: async (req, res) => {
+		const { store } = require('../../models');
 		const { production } = require('../../models');
 		const { store_production } = require('../../models');
 		const { production_quantity } = require('../../models');
-		console.log('test', req.headers)
+		const dotenv = require('dotenv');
+		dotenv.config({ path: './.env' });
 		console.log(req.params.date)
 
-		if(req.body.storeId === undefined) return res.status(404).send('잘못된 요청입니다')
+		if(req.body.storeId === undefined) return res.status(400).send('잘못된 요청입니다')
 
+		//날씨 요청
+		// const weatherURL = (lat, lon) => {
+		// 	fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely,current&appid=${process.env.WEATHER_KEY}`)
+		// 		.then(res => res.json())
+		// 		.then(data => data)
+		// }	
+		
+		// let storeWeather =
+		// 	await store.findOne({
+		// 		where : { id : req.body.storeId},
+		// 		attributes : ['latitude','longitude']
+		// 	})
+		// 	.then(data => {
+		// 		let { latitude, longitude } = data
+		// 		weatherURL(latitude, longitude)
+		// 	})
+		
+
+		//store 2에서 파는 물품들
 		let salesProduction = 
 			await store_production.findAll({ 
 				where: { storeId : req.body.storeId},
-				include : [production]
+				include : [production],
+				attributes : ['id'],
 			});
-		
-		// let test = 
-		// 	await store_production.getProduction()
-		// 	.catch(err => res.send(err))
+		// console.log(salesProduction.map(e => {
+		// 	return e.dataValues.production.dataValues
+		// }))
 
+		//물품들 아이디
+		let salesId	= 
+			salesProduction.map(e => {
+				let arr = []
+				arr.push(e.id)
+				return arr;
+			})
+			//console.log(salesId)
+
+		//각각의 양
 		let salesProductionQuantity = 
 			await production_quantity.findAll({
+				where : { id : salesId },
 				attributes : { exclude : ["weatherId","createdAt","updatedAt"]},
-				include: [store_production]
+				order: [['quantity', 'DESC']]
 			})
+			.then(data =>  {
+				//상품 정보
+				const productionData = 
+					salesProduction.map((e) => {
+						let obj = {}
+						obj['id'] = e.dataValues.id
+						obj['production'] = e.dataValues.production.dataValues
+						return obj
+					})	
 
-			//store_productionId가 storeId로만 연결된듯
-		
-		return res.json(salesProductionQuantity)
+				//상품 id
+				const productionId = 	
+					salesProduction.map(e => {
+						return e.dataValues.id
+					})
 
-		// production_quantity.findAll({ 
-		// 	attributes : { exclude : ["weatherId","createdAt","updatedAt"]},
-		// 	include : {
-		// 		model : store_production,
-		// 		where : { storeId : req.body.storeId},
-		// 		//include : { model : production },
-		// 	},
-		// 	order : [['quantity', 'desc']]
-		// })
-		// .then(data => {
-		// 	return res.status(200).json({
-		// 		storeId : req.body.storeId,
-		// 		data
-		// 	})
-		// })
-		// .catch(err => {
-		// 	console.log(err)
-		// 	return res.status(500).send(err)
-		// 	})
+				const quantityData = 
+					data.map(e => {
+						let result = []
+						for(let i = 0; i < productionId.length ; i++){
+							if(productionId[i] === e.dataValues.id){
+								productionData[i]['production']['quantity'] = e.dataValues.quantity
+								result = productionData[i]
+							}
+						}
+						return result
+					})								
+				return res.json({
+					"storeId" : req.body.storeId,
+					quantityData
+				})
+			})
+			.catch(err => {
+				console.log(err)
+				res.status(500).send(err)
+		})
 
 	}
 };
-	
-
-// app.get('/concerts_user/:id/:fest_id', (req, res) => {
-// 	users.
-// 		findOne({
-// 			where: { user_Id: req.params.id, },
-// 			include: {
-// 				attributes: ['concert_Id', 'starttime', 'endtime', 'stage', 'artist', 'con_day', 'festival_Id'],
-// 				model: concert,
-// 				where: {
-// 					festival_Id: req.params.fest_id
-// 				},
-// 				through: {attributes: []}
-// 			}
-// 		})
-// 		.then(result => {
-// 			res.status(200).json(result.Concerts);
-// 		})
-// 		.catch(error => {
-// 			res.status(500).send(error);
-// 		})
-// 	});
