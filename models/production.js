@@ -1,5 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
+const dotenv = require('dotenv');
 module.exports = (sequelize, DataTypes) => {
   class production extends Model {
     static associate(models) {
@@ -15,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   production.init(
     {
-      storeId: DataTypes.INTEGER,
       productionName: {
         type: DataTypes.STRING,
         allowNull: false,

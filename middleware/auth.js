@@ -1,7 +1,8 @@
 const authMiddleware = (req, res, next) => {
   const jwt = require('jsonwebtoken');
   const tokenMiddleware = require('../middleware/token');
-
+  const dotenv = require('dotenv');
+  require('dotenv').config();
   console.log('auth req.body', req.body);
   const access_token = req.headers['x-access-token'] || req.query.access_token;
 

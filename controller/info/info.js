@@ -1,7 +1,6 @@
 module.exports = {
-    get: (req, res) => {
-        console.log('test')
-        res.end();
-    }
-  };
-  
+  get: (req, res) => {
+    console.log('test');
+    res.end();
+  },
+};
