@@ -55,25 +55,19 @@ app.use(
 // app.use('*', authMiddleware)
 //app.use('/token', tokenMiddleware)
 
-// async function auth (req, res, next) {
-//   await authMiddleware(req)
-//   next()
-// }
-
 app.use('/users', usersRouter);
 app.use('/social', socialRouter);
 
-app.use('*', authMiddleware); //async(req, res, next) => {await authMiddleware next()})
-//왜 next()가 안될까
+//app.use('*', authMiddleware);
 
-app.use('/search', searchRouter);
-app.use('/predict', predictRouter);
-app.use('/trend', trendRouter);
-app.use('/info', infoRouter);
-app.use('/editinfo', editInfoRouter);
-app.use('/managemenu', manageMenuRouter);
-app.use('/managestore', manageStoreRouter);
-app.use('/update', updateSalesRouter);
+app.use('/search', authMiddleware, searchRouter);
+app.use('/predict', authMiddleware, predictRouter);
+app.use('/trend', authMiddleware, trendRouter);
+app.use('/info', authMiddleware, infoRouter);
+app.use('/editinfo', authMiddleware, editInfoRouter);
+app.use('/managemenu', authMiddleware, manageMenuRouter);
+app.use('/managestore', authMiddleware, manageStoreRouter);
+app.use('/update', authMiddleware, updateSalesRouter);
 
 app.listen(4000, () => {
   console.log('server on 4000');
