@@ -22,7 +22,8 @@ module.exports = {
             { account: email, gmt: Date.now() },
             process.env.ACCESS_SECRET,
             {
-              expiresIn: '15m',
+              //expiresIn: '1m',
+               expiresIn: '15m',
               issuer: 'nyam-nyamServer',
             })
         const refresh = 
@@ -30,7 +31,8 @@ module.exports = {
             { account: email, gmt: Date.now() },
             process.env.REFRESH_SECRET,
             {
-              expiresIn: '10 days',
+              //expiresIn: '1m',
+               expiresIn: '10 days',
               issuer: 'nyam-nyamServer',
             })
         const tokenGenerate = (access, refresh) => {
