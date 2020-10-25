@@ -1,13 +1,9 @@
 module.exports = {
 	post: async (req, res) => {
 		const { user } = require('../../models');
-
-		if(
-			req.body === undefined ||
-			!req.body.userId) 
-			{
-				return res.status(400).send('잘못된 요청입니다')
-			}
+		if( req.body === undefined || !req.body.userId) {
+			return res.status(400).send('잘못된 요청입니다')
+		}
 
 		await user.findOne({ where : { id : req.body.userId }})
 			.catch(err => res.send(err))

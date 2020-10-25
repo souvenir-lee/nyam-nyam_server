@@ -7,7 +7,7 @@ const session = require('express-session');
 const cors = require('cors');
 
 const authMiddleware = require('./middleware/auth');
-// const tokenMiddleware =require('./middleware/token')
+const tokenMiddleware =require('./middleware/token')
 const usersRouter = require('./routes/users');
 const socialRouter = require('./routes/social');
 const searchRouter = require('./routes/search');
@@ -52,13 +52,12 @@ app.use(
   })
 );
 
-// app.use('*', authMiddleware)
-//app.use('/token', tokenMiddleware)
 
 app.use('/users', usersRouter);
 app.use('/social', socialRouter);
 
 //app.use('*', authMiddleware);
+app.use('/token', tokenMiddleware)
 
 app.use('/search', authMiddleware, searchRouter);
 app.use('/predict', authMiddleware, predictRouter);

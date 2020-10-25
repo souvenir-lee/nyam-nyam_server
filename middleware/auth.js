@@ -1,16 +1,23 @@
-
 const authMiddleware = (req, res, next) => {
   const jwt = require('jsonwebtoken');
-  const tokenMiddleware = require('../middleware/token');
   const { user } = require('../models');
+  const dotenv = require('dotenv');
+  require('dotenv').config();
 
   console.log('auth req.body', req.body);
   const access_token = req.headers['x-access-token'];
-  const refresh_token = req.headers['x-refresh-token'];
 
   // token does not exist
-  if (!access_token || !refresh_token) {
-    return res.status(401).json('토큰이 없거나 로그인 되지 않았습니다');
+  if (!access_token) {
+    return res.status(404).json('잘못된 요청입니다. 토큰이 없거나 로그인 되지 않았습니다');
+  }else if (req.body.social === 'kakao'){ 
+    user
+      .findOne({ where: { access_token: access_token } })
+      .then((data) => data)
+      .catch((err) => {
+        console.log('소셜 로그인 정보를 못찾았습니다.', err);
+        return res.status(404).json('소셜 로그인 중 access_token이 없습니다.', err);
+      });
   }
 
   // 토큰 만료 확인하기
@@ -24,47 +31,38 @@ const authMiddleware = (req, res, next) => {
           issuer: 'nyam-nyamServer',
         })
 
-    const refresh = 
-      jwt.verify(
-        refresh_token,
-        process.env.REFRESH_SECRET,
-        {
-          expiresIn: '10 days',
-          issuer: 'nyam-nyamServer',
-        })
-
-    const token = (access, refresh) => { 
-      console.log('유효성 검사를 하였습니다')
+    const token = (access) => { 
+      console.log('access 토큰유효성 검사를 하였습니다')
       return 
     }
-    token(access, refresh)
+    token(access)
   };
 
   const onError = (error) => {
-    //access token가 만료되었다면
     console.log('여기인건가~~~~')
     if (error.message === 'jwt expired') {
       console.log('auth error', error.message);
-      tokenMiddleware(req, res, next);
+      return res.status(401).json({'access token이 만료되었습니다' : error.message})
+      //tokenMiddleware(req, res, next);
     } else {
-      return res.status(401).json({'token 유효성 에러':error.message});
+      return res.status(403).json({'access token 유효성 에러':error.message});
     }
   };
 
   //process the promise
   user.findOne({
-    where: { access_token : access_token, refresh_token: refresh_token}
+    where: { access_token : access_token}
   })
     .then(data => {
       if(data) {   
-        console.log('1')  
+        console.log('auth 1')  
         checkToken()
       } else{
-        return res.status(401).json('확인되지 않은 유저입니다. 토큰을 확인해주세요')
+        return res.status(404).json('확인되지 않은 유저입니다. 토큰을 확인해주세요')
       }
     })
-    .then(next())
     .catch(onError)
+    .then(next())
 };
 
 module.exports = authMiddleware;
