@@ -2,24 +2,60 @@ const {
   store,
   production,
   production_ingredient,
+  ingredient,
   store_production,
 } = require('../../models');
 module.exports = {
   get: async (req, res) => {
     const { storeId, productionId } = req.body;
-    const menuInfo = await store_production.findOne({
-      include: {
-        model: store,
-        attributes: ['storeName'],
-        include: {
-          model: production,
-          attributes: ['productionName', 'productionImg', 'price', 'info'],
-        },
-      },
-      where: { storeId: storeId, productionId: productionId }, //여긴 store소속이 맞음
+    const storeInfo = await store.findOne({
+      where: { id: storeId },
     });
-    res.status(200).send(menuInfo);
+    const menuInfo = await production.findOne({
+      where: { id: productionId },
+    });
+    const findIngredient = await production_ingredient.findAll({
+      where: { productionId: productionId },
+    });
+    const ingredientInfo = await ingredient.findOne({
+      where: {
+        id: findIngredient[0].dataValues.ingredientId,
+      },
+    });
+    if (storeInfo) {
+      if (menuInfo) {
+        if (ingredientInfo) {
+          if (findIngredient[1]) {
+            const ingredientInfo2 = await ingredient.findOne({
+              where: {
+                id: findIngredient[1].dataValues.ingredientId,
+              },
+            });
+            res.status(200).send({
+              storeName: storeInfo.dataValues.storeName,
+              productionName: menuInfo.dataValues.productionName,
+              price: menuInfo.dataValues.price,
+              info: menuInfo.dataValues.info,
+              ingredient1: ingredientInfo.dataValues.name,
+              ingredient2: ingredientInfo2.dataValues.name,
+            });
+          } else {
+            res.status(200).send({
+              storeName: storeInfo.dataValues.storeName,
+              productionName: menuInfo.dataValues.productionName,
+              price: menuInfo.dataValues.price,
+              info: menuInfo.dataValues.info,
+              ingredient1: ingredientInfo.dataValues.name,
+              ingredient2: null,
+            });
+          }
+        }
+      }
+    } else {
+      res.status(404).send('Bad Request');
+    }
   },
+
   post: async (req, res) => {
     const {
       storeId,
