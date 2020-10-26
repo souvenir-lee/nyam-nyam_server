@@ -50,47 +50,114 @@ module.exports = {
       console.log('엑세스토큰', access_token);
       console.log('유저', user_data);
 
+      const login = (user) => {
+        console.log('유저', user);
+        if (user) {
+          const access = jwt.sign(
+            { account: user_data.kakao_account.email, gmt: Date.now() },
+            process.env.ACCESS_SECRET,
+            {
+              expiresIn: '15m',
+              issuer: 'nyam-nyamServer',
+            }
+          );
+          const refresh = jwt.sign(
+            { account: user_data.kakao_account.email, gmt: Date.now() },
+            process.env.REFRESH_SECRET,
+            {
+              expiresIn: '10 days',
+              issuer: 'nyam-nyamServer',
+            }
+          );
+          const tokenGenerate = (access, refresh) => {
+            let obj = {};
+            obj['access_token'] = access;
+            obj['refresh_token'] = refresh;
+            return obj;
+          };
+          return tokenGenerate(access, refresh);
+        }
+      };
+      const respond = (token) => {
+        user
+          .update(
+            {
+              access_token: token.access_token,
+              refresh_token: token.refresh_token,
+            },
+            { where: { email: user_data.kakao_account.email } }
+          )
+          .then(() => {
+            user
+              .findOne({
+                attributes: {
+                  exclude: ['password', 'createdAt', 'updatedAt'],
+                },
+                where: { email: user_data.kakao_account.email },
+              })
+              .then(async (userdata) => {
+                let { id } = userdata;
+                console.log(id);
+
+                //store 정보 받기
+                let storedata = await store
+                  .findAll({
+                    attributes: {
+                      exclude: ['userId', 'createdAt', 'updatedAt'],
+                    },
+                    where: { userId: id },
+                  })
+                  .then((data) => {
+                    let result = [];
+                    let storeArr = data.map((e) => {
+                      result = e.dataValues;
+                      return result;
+                    });
+                    return storeArr;
+                  })
+                  .catch((err) => console.log(err));
+
+                return res.status(201).json({
+                  message: 'logged in successfully',
+                  userdata,
+                  storedata,
+                });
+              })
+              .catch((err) => console.log(err));
+          });
+      };
+
       const findUser = await user.findOne({
         where: {
           password: user_data.id,
           social: 'kakao',
         },
       });
-
+      console.log('findUser', findUser);
       if (findUser) {
-        res.status(302).send({
-          userdata: {
-            username: user_data.properties.nickname,
-            email: user_data.kakao_account.email,
-            // nickname: user_data.properties.nickname,
-            password: user_data.id,
-            userImg: user_data.properties.profile_image,
-            access_token: access_token.access_token,
-            refresh_token: access_token.refresh_token,
-            social: 'kakao',
-          },
-        });
+        user
+          .findOne({
+            where: {
+              password: user_data.id,
+              social: 'kakao',
+            },
+          })
+          .then((data) => {
+            console.log('데이터', data);
+            login(data);
+          })
+          .then(respond)
+          .catch((err) => {
+            console.log('login error', err);
+            return res.status(500).json({ 'login error': err });
+          });
       } else {
-        // console.log('엑세스토큰1', access_token);
-        const signupUser = user.create({
-          username: user_data.properties.nickname,
-          email: user_data.kakao_account.email,
-          // nickname: user_data.properties.nickname,
-          password: user_data.id,
-          userImg: user_data.properties.profile_image,
-          access_token: access_token.access_token,
-          refresh_token: access_token.refresh_token,
-          social: 'kakao',
-        });
-        console.log('ss', signupUser);
-        res.status(302).send({
-          message: 'logged in successfully',
+        return res.status(302).send({
+          message: '유저정보',
           userdata: {
             email: user_data.kakao_account.email,
             username: user_data.properties.nickname,
             userImg: user_data.properties.profile_image,
-            access_token: access_token.access_token,
-            refresh_token: access_token.refresh_token,
             social: 'kakao',
           },
         });
