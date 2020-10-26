@@ -1,6 +1,5 @@
 'use strict';
 const { Model } = require('sequelize');
-const dotenv = require('dotenv');
 module.exports = (sequelize, DataTypes) => {
   class ingredient extends Model {
     static associate(models) {

@@ -3,10 +3,8 @@ require('dotenv').config();
 module.exports = {
   post: async (req, res) => {
     const { user } = require('../../models');
+    const { store } = require('../../models');
     const jwt = require('jsonwebtoken');
-    const { v4 } = require('uuid');
-    const uuidNew = await v4();
-    const authMiddleware = require('../../middleware/auth');
     const { email, password } = req.body;
 
     if (
@@ -17,56 +15,75 @@ module.exports = {
       return res.status(400).send('유효하지 않은 요청입나다.');
     }
 
-    const check = (user) => {
+    const login = (user) => {
       if (user) {
-        if (user.refresh_token === null) {
-          const access = new Promise((resolve, reject) => {
-            jwt.sign(
-              { account: email, gmt: Date.now() },
-              process.env.ACCESS_SECRET,
-              {
-                expiresIn: '15m',
-                issuer: 'nyam-nyamServer',
-              },
-              (err, token) => {
-                if (err) reject(err);
-                resolve(token);
-              }
-            );
-          });
-          return access;
+        const access = 
+          jwt.sign(
+            { account: email, gmt: Date.now() },
+            process.env.ACCESS_SECRET,
+            {
+              //expiresIn: '1m',
+               expiresIn: '15m',
+              issuer: 'nyam-nyamServer',
+            })
+        const refresh = 
+          jwt.sign(
+            { account: email, gmt: Date.now() },
+            process.env.REFRESH_SECRET,
+            {
+              //expiresIn: '1m',
+               expiresIn: '10 days',
+              issuer: 'nyam-nyamServer',
+            })
+        const tokenGenerate = (access, refresh) => {
+          let obj = {}
+          obj['access_token'] = access
+          obj['refresh_token'] = refresh
+          return obj
         }
-        console.log('토큰이 있습니다.');
-        //authMiddleware(req)
-        return res.status(401).send('토큰이 있습니다.');
+        return tokenGenerate(access, refresh)
+      } else {
+        console.log('user 정보가 없습니다',user.dataValues);
+        return res.status(404).send('user 정보가 없습니다');
       }
-      console.log('user 정보가 없습니다');
-      return res.status(404).send('user 정보가 없습니다');
     };
 
     const respond = (token) => {
-      let refresh_token = uuidNew;
       user
         .update(
-          { access_token: token, refresh_token: refresh_token },
+          { access_token: token.access_token, refresh_token: token.refresh_token },
           { where: { email: email } }
         )
         .then(() => {
-          console.log('update', token);
-          let result = { access_token: token, refresh_token: refresh_token };
-          return result;
-        })
-        .then((token) => {
-          // console.log('업뎃후 token', token)
           user
             .findOne({
               attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
               where: { email: email },
             })
-            .then((userdata) => {
+            .then(async (userdata) => {
+              let { id } = userdata
+              console.log(id)
+
+              //store 정보 받기
+              let storedata = 
+                await store.findAll({
+                  attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
+                  where : { userId : id}
+                })
+                .then(data => {
+                  let result = []
+                  let storeArr = data.map(e => {
+                    result = e.dataValues
+                    return result
+                  })
+                  return storeArr
+                })
+                .catch(err => console.log(err))
+
               return res.json({
                 message: 'logged in successfully',
                 userdata,
+                storedata
               });
             })
             .catch((err) => console.log(err));
@@ -78,9 +95,12 @@ module.exports = {
         attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
         where: { email: email },
       })
-      .then(check)
+      .then(login)
       .then(respond)
-      .catch((err) => console.log('login error', err));
+      .catch((err) => {
+        console.log('login error', err)
+        return res.status(500).json({'login error': err})
+      });
   },
 };
 
