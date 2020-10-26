@@ -1,7 +1,6 @@
 const authMiddleware = (req, res, next) => {
   const jwt = require('jsonwebtoken');
   const { user } = require('../models');
-  const dotenv = require('dotenv');
   require('dotenv').config();
 
   console.log('auth req.body', req.body);
@@ -10,14 +9,6 @@ const authMiddleware = (req, res, next) => {
   // token does not exist
   if (!access_token) {
     return res.status(404).json('잘못된 요청입니다. 토큰이 없거나 로그인 되지 않았습니다');
-  }else if (req.body.social === 'kakao'){ 
-    user
-      .findOne({ where: { access_token: access_token } })
-      .then((data) => data)
-      .catch((err) => {
-        console.log('소셜 로그인 정보를 못찾았습니다.', err);
-        return res.status(404).json('소셜 로그인 중 access_token이 없습니다.', err);
-      });
   }
 
   // 토큰 만료 확인하기
@@ -33,6 +24,7 @@ const authMiddleware = (req, res, next) => {
 
     const token = (access) => { 
       console.log('access 토큰유효성 검사를 하였습니다')
+      //next()
       return 
     }
     token(access)
@@ -55,8 +47,14 @@ const authMiddleware = (req, res, next) => {
   })
     .then(data => {
       if(data) {   
-        console.log('auth 1')  
-        checkToken()
+        let { social } = data
+        console.log('auth data',social)
+        if(social === 'kakao'){
+          return
+        }else {
+          console.log('auth 로컬')  
+          checkToken()
+        }
       } else{
         return res.status(404).json('확인되지 않은 유저입니다. 토큰을 확인해주세요')
       }
