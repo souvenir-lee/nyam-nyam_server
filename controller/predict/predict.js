@@ -1,5 +1,5 @@
 module.exports = {
-	get: async (req, res) => {
+	post: async (req, res) => {
 		const { store } = require('../../models');
 		const { production } = require('../../models');
 		const { store_production } = require('../../models');

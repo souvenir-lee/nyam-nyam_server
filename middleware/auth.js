@@ -24,8 +24,8 @@ const authMiddleware = (req, res, next) => {
 
     const token = (access) => { 
       console.log('access 토큰유효성 검사를 하였습니다')
-      //next()
-      return 
+      next()
+      //return 
     }
     token(access)
   };
@@ -35,7 +35,6 @@ const authMiddleware = (req, res, next) => {
     if (error.message === 'jwt expired') {
       console.log('auth error', error.message);
       return res.status(401).json({'access token이 만료되었습니다' : error.message})
-      //tokenMiddleware(req, res, next);
     } else {
       return res.status(403).json({'access token 유효성 에러':error.message});
     }
@@ -47,20 +46,14 @@ const authMiddleware = (req, res, next) => {
   })
     .then(data => {
       if(data) {   
-        let { social } = data
-        console.log('auth data',social)
-        if(social === 'kakao'){
-          return
-        }else {
-          console.log('auth 로컬')  
-          checkToken()
-        }
+        console.log('auth 로컬')  
+        checkToken()
       } else{
         return res.status(404).json('확인되지 않은 유저입니다. 토큰을 확인해주세요')
       }
     })
     .catch(onError)
-    .then(next())
+    //.then(next())
 };
 
 module.exports = authMiddleware;
