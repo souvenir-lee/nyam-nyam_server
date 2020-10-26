@@ -7,7 +7,6 @@ module.exports = {
         email: '1111@test.com',
         password : process.env.TEMP,
         userName: "공용",
-        nickName: null,
         userImg : null,
         social : null
       },
@@ -15,7 +14,6 @@ module.exports = {
         email: 'souvenir@test.com',
         password : process.env.TEMP,
         userName: "한슬",
-        nickName: null,
         userImg : null,
         social : null
       },
@@ -23,7 +21,6 @@ module.exports = {
         email: 'sjkwan0922@test.com',
         password : process.env.TEMP,
         userName: "수진",
-        nickName: null,
         userImg : null,
         social : null
       },
@@ -31,7 +28,6 @@ module.exports = {
         email: 'piecemakerz@test.com',
         password : process.env.TEMP,
         userName: "혁원",
-        nickName: null,
         userImg : null,
         social : null
       },
@@ -39,7 +35,6 @@ module.exports = {
         email: 'lwd3737@test.com',
         password : process.env.TEMP,
         userName: "원동",
-        nickName: null,
         userImg : null,
         social : null
       }], 

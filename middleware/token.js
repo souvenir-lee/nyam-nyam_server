@@ -2,7 +2,6 @@ const tokenMiddleware = async (req, res, next) => {
   console.log(req.headers);
   const jwt = require('jsonwebtoken');
   const { user } = require('../models');
-  const dotenv = require('dotenv');
   require('dotenv').config();
   const access_token = req.headers['x-access-token'];
   const refresh_token = req.headers['x-refresh-token'];
@@ -84,7 +83,7 @@ const tokenMiddleware = async (req, res, next) => {
         { account: user, gmt: Date.now() },
         process.env.ACCESS_SECRET,
         {
-          expiresIn: '1m',
+          expiresIn: '100m',
           issuer: 'nyam-nyamServer',
         }
       );
@@ -92,7 +91,7 @@ const tokenMiddleware = async (req, res, next) => {
         { account: user, gmt: Date.now() },
         process.env.REFRESH_SECRET,
         {
-          expiresIn: '1m',
+          expiresIn: '10 days',
           issuer: 'nyam-nyamServer',
         }
       );
@@ -105,7 +104,7 @@ const tokenMiddleware = async (req, res, next) => {
       };
       return tokenGenerate(access, refresh);
     } else {
-      console.log('user 정보가 없습니다', user.dataValues);
+      console.log('user 정보가 없습니다');
       return res.status(404).send('user 정보가 없습니다');
     }
   };
@@ -140,7 +139,9 @@ const tokenMiddleware = async (req, res, next) => {
       })
       .catch((err) => console.log('token update 오류', err));
   };
+
   await checkAccessToken().catch(onAccessError);
   await checkRefreshToken().catch(onRefreshError);
+  next();
 };
 module.exports = tokenMiddleware;
