@@ -2,7 +2,6 @@ const axios = require('axios');
 axios.defaults.withCredentials = true;
 const { user } = require('../../models');
 const qs = require('qs');
-const dotenv = require('dotenv');
 require('dotenv').config();
 const session = require('express-session');
 
@@ -58,20 +57,20 @@ module.exports = {
       });
 
       if (findUser) {
-        res.status(302).send({
-          userdata: {
-            username: user_data.properties.nickname,
-            email: user_data.kakao_account.email,
-            // nickname: user_data.properties.nickname,
-            password: user_data.id,
-            userImg: user_data.properties.profile_image,
-            access_token: access_token.access_token,
-            refresh_token: access_token.refresh_token,
-            social: 'kakao',
-          },
-        });
+        res.redirect('/login')
+        // res.status(200).send({
+        //   userdata: {
+        //     username: user_data.properties.nickname,
+        //     email: user_data.kakao_account.email,
+        //     password: user_data.id,
+        //     userImg: user_data.properties.profile_image,
+        //     access_token: findUser.dataValues.access_token,
+        //     refresh_token: findUser.dataValues.efresh_token,
+        //     social: 'kakao',
+        //   },
+        // });
       } else {
-        // console.log('엑세스토큰1', access_token);
+        console.log('엑세스토큰1', access_token);
         const signupUser = user.create({
           username: user_data.properties.nickname,
           email: user_data.kakao_account.email,
@@ -83,14 +82,14 @@ module.exports = {
           social: 'kakao',
         });
         console.log('ss', signupUser);
-        res.status(302).send({
+        res.status(200).send({
           message: 'logged in successfully',
           userdata: {
             email: user_data.kakao_account.email,
             username: user_data.properties.nickname,
             userImg: user_data.properties.profile_image,
-            access_token: access_token.access_token,
-            refresh_token: access_token.refresh_token,
+            // access_token: access_token.access_token,
+            // refresh_token: access_token.refresh_token,
             social: 'kakao',
           },
         });

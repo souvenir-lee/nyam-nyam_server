@@ -1,6 +1,7 @@
 const checkTokenMiddleware = async (req, res, next) => {
 	console.log('check 들어옴');
 	const { user, store } = require('../models');
+	const jwt = require('jsonwebtoken');
 	const access_token = req.headers['x-access-token'] 
 	require('dotenv').config();
 
@@ -9,10 +10,13 @@ const checkTokenMiddleware = async (req, res, next) => {
 		return res.status(404).json('잘못된 요청입니다. 토큰을 확인해주세요');
 	}
 
+	const decoded = jwt.decode(access_token, { complete: true });
+  const account = decoded.payload.account;
+
 	 user
 		.findOne({
 			attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
-			where: { access_token: access_token },
+			where: { email: account },
 		})
 		.then(async (userdata) => {
 			let { id } = userdata
