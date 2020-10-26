@@ -23,7 +23,7 @@ module.exports = {
             process.env.ACCESS_SECRET,
             {
               //expiresIn: '1m',
-               expiresIn: '15m',
+              expiresIn: '15m',
               issuer: 'nyam-nyamServer',
             })
         const refresh = 
@@ -32,7 +32,7 @@ module.exports = {
             process.env.REFRESH_SECRET,
             {
               //expiresIn: '1m',
-               expiresIn: '10 days',
+              expiresIn: '10 days',
               issuer: 'nyam-nyamServer',
             })
         const tokenGenerate = (access, refresh) => {
@@ -43,7 +43,7 @@ module.exports = {
         }
         return tokenGenerate(access, refresh)
       } else {
-        console.log('user 정보가 없습니다',user.dataValues);
+        console.log('user 정보가 없습니다');
         return res.status(404).send('user 정보가 없습니다');
       }
     };

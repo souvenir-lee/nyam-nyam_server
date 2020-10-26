@@ -12,7 +12,6 @@ module.exports = {
     }
     const {
       userName,
-      nickName,
       email,
       password,
       stores,
@@ -33,7 +32,6 @@ module.exports = {
         email: email,
         password: password,
         username: userName,
-        nickname: nickName,
         userImg: userImg,
       });
       const findUserId = await user.findOne({

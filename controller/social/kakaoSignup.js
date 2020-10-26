@@ -62,7 +62,6 @@ module.exports = {
           userdata: {
             username: user_data.properties.nickname,
             email: user_data.kakao_account.email,
-            nickname: user_data.properties.nickname,
             password: user_data.id,
             userImg: user_data.properties.profile_image,
             access_token: access_token.access_token,
@@ -76,7 +75,6 @@ module.exports = {
           '유저2',
           user_data.properties.nickname,
           user_data.kakao_account.email,
-          user_data.properties.nickname,
           user_data.id,
           user_data.properties.profile_image,
           access_token.access_token,
@@ -85,7 +83,6 @@ module.exports = {
         user.create({
           username: user_data.properties.nickname,
           email: user_data.kakao_account.email,
-          nickname: user_data.properties.nickname,
           password: user_data.id,
           userImg: user_data.properties.profile_image,
           access_token: access_token.access_token,

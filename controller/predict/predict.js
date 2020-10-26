@@ -6,7 +6,6 @@ module.exports = {
 		const { production_quantity } = require('../../models');
 		const dotenv = require('dotenv');
 		dotenv.config({ path: './.env' });
-		console.log(req.params.date)
 
 		if(req.body.storeId === undefined) return res.status(400).send('잘못된 요청입니다')
 

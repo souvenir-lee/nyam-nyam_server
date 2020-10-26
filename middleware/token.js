@@ -2,7 +2,6 @@ const tokenMiddleware = async (req, res, next) => {
   console.log(req.headers);
   const jwt = require('jsonwebtoken');
   const { user } = require('../models');
-  const dotenv = require('dotenv');
   require('dotenv').config();
   const access_token = req.headers['x-access-token'] 
   const refresh_token = req.headers['x-refresh-token'] 
@@ -49,6 +48,7 @@ const tokenMiddleware = async (req, res, next) => {
           }else{ 
             console.log('refresh')
             resolve(decode) ;
+            return res.status(200).json('refresh 문제없음')
           }
         })
       })
@@ -88,7 +88,7 @@ const tokenMiddleware = async (req, res, next) => {
           { account: user, gmt: Date.now() },
           process.env.ACCESS_SECRET,
           {
-            expiresIn: '1m',
+            expiresIn: '15m',
             issuer: 'nyam-nyamServer',
           })
       const refresh = 
@@ -96,7 +96,7 @@ const tokenMiddleware = async (req, res, next) => {
           { account: user, gmt: Date.now() },
           process.env.REFRESH_SECRET,
           {
-            expiresIn: '1m',
+            expiresIn: '10 days',
             issuer: 'nyam-nyamServer',
           })
       const tokenGenerate = (access, refresh) => {
@@ -108,7 +108,7 @@ const tokenMiddleware = async (req, res, next) => {
       }
       return tokenGenerate(access, refresh)
     } else {
-      console.log('user 정보가 없습니다',user.dataValues);
+      console.log('user 정보가 없습니다');
       return res.status(404).send('user 정보가 없습니다');
     }
   };
@@ -120,11 +120,11 @@ const tokenMiddleware = async (req, res, next) => {
         { access_token: token.access_token, refresh_token: token.refresh_token },
         { where: { email: token.decoded } }
       )
-      .then(() => {
+      .then((id) => {
         user
           .findOne({
             attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
-            where: { id: 1 },
+            where: { id: id },
           })
           .then((userdata) => {
             console.log(userdata.dataValues);
@@ -144,7 +144,7 @@ const tokenMiddleware = async (req, res, next) => {
   
     await checkAccessToken().catch(onAccessError)
     await checkRefreshToken().catch(onRefreshError)
-
+    next()
 
 };
 

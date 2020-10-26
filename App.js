@@ -8,6 +8,7 @@ const cors = require('cors');
 
 const authMiddleware = require('./middleware/auth');
 const tokenMiddleware =require('./middleware/token')
+const checkTokenMiddleware =require('./middleware/autoLogin')
 const usersRouter = require('./routes/users');
 const socialRouter = require('./routes/social');
 const searchRouter = require('./routes/search');
@@ -58,6 +59,7 @@ app.use('/social', socialRouter);
 
 //app.use('*', authMiddleware);
 app.use('/token', tokenMiddleware)
+app.use('/autologin', authMiddleware, checkTokenMiddleware)
 
 app.use('/search', authMiddleware, searchRouter);
 app.use('/predict', authMiddleware, predictRouter);
