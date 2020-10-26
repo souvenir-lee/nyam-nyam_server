@@ -5,22 +5,22 @@ module.exports = {
     return queryInterface.bulkInsert('production_quantities', 
       [{
         store_productionId : 1,
-        quantity : 10,
+        quantity : 112,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 2,
-        quantity : 7,
+        quantity : 98,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 3,
-        quantity : 16,
+        quantity : 87,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 4,
-        quantity : 17,
+        quantity : 67,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
@@ -40,42 +40,42 @@ module.exports = {
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 8,
-        quantity : 10,
+        quantity : 11,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 9,
-        quantity : 7,
+        quantity : 4,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 10,
-        quantity : 16,
+        quantity : 15,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 11,
-        quantity : 17,
+        quantity : 2,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 12,
-        quantity : 20,
+        quantity : 25,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 13,
-        quantity : 13,
+        quantity : 28,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 14,
-        quantity : 8,
+        quantity : 37,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 15,
-        quantity : 10,
+        quantity : 24,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
@@ -105,22 +105,22 @@ module.exports = {
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 21,
-        quantity : 13,
+        quantity : 17,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 22,
-        quantity : 13,
+        quantity : 19,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 23,
-        quantity : 13,
+        quantity : 3,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 24,
-        quantity : 13,
+        quantity : 23,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
@@ -130,52 +130,52 @@ module.exports = {
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 26,
-        quantity : 13,
+        quantity : 27,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 27,
-        quantity : 13,
+        quantity : 11,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 28,
-        quantity : 13,
+        quantity : 9,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 29,
-        quantity : 13,
+        quantity : 7,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 30,
-        quantity : 13,
+        quantity : 6,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 31,
-        quantity : 13,
+        quantity : 14,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 32,
-        quantity : 13,
+        quantity : 20,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 33,
-        quantity : 13,
+        quantity : 14,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 34,
-        quantity : 13,
+        quantity : 12,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 35,
-        quantity : 13,
+        quantity : 10,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
@@ -185,27 +185,27 @@ module.exports = {
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 37,
-        quantity : 13,
+        quantity : 23,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 38,
-        quantity : 13,
+        quantity : 22,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 39,
-        quantity : 13,
+        quantity : 28,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 40,
-        quantity : 13,
+        quantity : 6,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       },{
         store_productionId : 41,
-        quantity : 13,
+        quantity : 9,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
       }], 

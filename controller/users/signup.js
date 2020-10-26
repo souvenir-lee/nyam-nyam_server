@@ -49,8 +49,7 @@ module.exports = {
       console.log('가게부분', createStore);
       res.status(200).send('회원가입이 완료되었습니다.');
     } catch (err) {
-      console.log(err);
-      res.status(401).send('Bad Request');
+      res.status(500).send('Bad Request');
     }
   },
 };
