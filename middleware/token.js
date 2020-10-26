@@ -43,11 +43,11 @@ const tokenMiddleware = async (req, res, next) => {
         },
         (err, decode) => {
           if (err) {
-            reject(err)
-          }else{ 
-            console.log('refresh')
-            resolve(decode) ;
-            return res.status(200).json('refresh 문제없음')
+            reject(err);
+          } else {
+            console.log('refresh');
+            resolve(decode);
+            return res.status(200).json('refresh 문제없음');
           }
         }
       );
@@ -79,22 +79,22 @@ const tokenMiddleware = async (req, res, next) => {
   };
   const generateToken = (user) => {
     if (user) {
-      const access = 
-        jwt.sign(
-          { account: user, gmt: Date.now() },
-          process.env.ACCESS_SECRET,
-          {
-            expiresIn: '15m',
-            issuer: 'nyam-nyamServer',
-          })
-      const refresh = 
-        jwt.sign(
-          { account: user, gmt: Date.now() },
-          process.env.REFRESH_SECRET,
-          {
-            expiresIn: '10 days',
-            issuer: 'nyam-nyamServer',
-          })
+      const access = jwt.sign(
+        { account: user, gmt: Date.now() },
+        process.env.ACCESS_SECRET,
+        {
+          expiresIn: '100m',
+          issuer: 'nyam-nyamServer',
+        }
+      );
+      const refresh = jwt.sign(
+        { account: user, gmt: Date.now() },
+        process.env.REFRESH_SECRET,
+        {
+          expiresIn: '10 days',
+          issuer: 'nyam-nyamServer',
+        }
+      );
       const tokenGenerate = (access, refresh) => {
         let obj = {};
         obj['access_token'] = access;
@@ -139,10 +139,9 @@ const tokenMiddleware = async (req, res, next) => {
       })
       .catch((err) => console.log('token update 오류', err));
   };
-  
-    await checkAccessToken().catch(onAccessError)
-    await checkRefreshToken().catch(onRefreshError)
-    next()
 
+  await checkAccessToken().catch(onAccessError);
+  await checkRefreshToken().catch(onRefreshError);
+  next();
 };
 module.exports = tokenMiddleware;
