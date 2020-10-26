@@ -62,7 +62,7 @@ module.exports = {
           userdata: {
             username: user_data.properties.nickname,
             email: user_data.kakao_account.email,
-            nickname: user_data.properties.nickname,
+            // nickname: user_data.properties.nickname,
             password: user_data.id,
             userImg: user_data.properties.profile_image,
             access_token: access_token.access_token,
@@ -72,27 +72,28 @@ module.exports = {
         });
       } else {
         // console.log('엑세스토큰1', access_token);
-        console.log(
-          '유저2',
-          user_data.properties.nickname,
-          user_data.kakao_account.email,
-          user_data.properties.nickname,
-          user_data.id,
-          user_data.properties.profile_image,
-          access_token.access_token,
-          access_token.refresh_token
-        );
-        user.create({
+        const signupUser = user.create({
           username: user_data.properties.nickname,
           email: user_data.kakao_account.email,
-          nickname: user_data.properties.nickname,
+          // nickname: user_data.properties.nickname,
           password: user_data.id,
           userImg: user_data.properties.profile_image,
           access_token: access_token.access_token,
           refresh_token: access_token.refresh_token,
           social: 'kakao',
         });
-        res.status(302).send('회원가입이 완료되었습니다');
+        console.log('ss', signupUser);
+        res.status(302).send({
+          message: 'logged in successfully',
+          userdata: {
+            email: user_data.kakao_account.email,
+            username: user_data.properties.nickname,
+            userImg: user_data.properties.profile_image,
+            access_token: access_token.access_token,
+            refresh_token: access_token.refresh_token,
+            social: 'kakao',
+          },
+        });
       }
     } catch (error) {
       console.log('에러', error.data);
