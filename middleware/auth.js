@@ -18,7 +18,7 @@ const authMiddleware = (req, res, next) => {
         access_token,
         process.env.ACCESS_SECRET,
         {
-          expiresIn: '15m', 
+          expiresIn: '30m', 
           issuer: 'nyam-nyamServer',
         })
 

@@ -23,7 +23,7 @@ module.exports = {
             process.env.ACCESS_SECRET,
             {
               //expiresIn: '1m',
-              expiresIn: '15m',
+              expiresIn: '30m',
               issuer: 'nyam-nyamServer',
             })
         const refresh = 
