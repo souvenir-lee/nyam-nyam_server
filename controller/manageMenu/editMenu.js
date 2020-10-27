@@ -1,9 +1,12 @@
 module.exports = {
   get: async (req, res) => {
-    const { storeId, productionId } = req.body;
+    const storeId = req.query.storeId;
+    const productionId = req.query.productionId;
     const { user, store, production, production_ingredient, ingredient, store_production, } = require('../../models');
     const jwt = require('jsonwebtoken');
     const access_token = req.headers['x-access-token']
+
+    console.log(req.query) //storeId, productionId
   
     //해당 유저만 접근할 수 있도록 하기
     const decoded = jwt.decode(access_token, { complete: true });
@@ -13,7 +16,6 @@ module.exports = {
       attributes: ['id']
     })
     const checkStore = await store.findOne({where : { id : storeId, userId : id.dataValues.id}})
-    console.log(id.dataValues.id, checkStore)
     if(!checkStore) return res.status(404).json('해당 매장은 접근 권한이 없습니다')
     
     //기존 기능 시작

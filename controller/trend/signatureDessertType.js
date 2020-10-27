@@ -14,28 +14,13 @@ module.exports = {
 			productionIdArray.push(productionId) 
 		}
 
-		let p_q_IdArray = []
-		//for(let i = 0; i< productionIdArray.length; i++){  //type0 은 8개 s_p는 11개
-			productionIdArray[0].map( (el) => {
-				let p_q_Id = store_production.findAll({
-					attributes : ['id'],
-					where : {productionId : el.id}
-				})
-				.then(data => {
-					//console.log('length',data)
-					for(let j=0; j< data.length; j++){
-						console.log('id', data[j].dataValues)
-						p_q_IdArray.push(data[j].dataValues.id)
-						console.log('array',p_q_IdArray)
-					}
-				})
-				return p_q_Id
-			})
-		//}
-		
-		//console.log('array',p_q_Id)
+		let test = await production.findAll({
+			//attributes : ['id'],
+			where : { dessertType : 0, type : 1},
+			include : [{model : production_quantity}],
+		})
 
-		return res.json(productionIdArray)
+		return res.json(test)
 	}
 };
   

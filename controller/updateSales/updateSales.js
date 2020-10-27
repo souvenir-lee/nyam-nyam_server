@@ -7,7 +7,7 @@ const {
 
 module.exports = {
   get: async (req, res) => {
-    const { storeId } = req.body;
+    const storeId = req.params.storeId;
     const findProduction = await store_production.findAll({
       include: {
         model: production,

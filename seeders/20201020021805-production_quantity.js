@@ -208,6 +208,71 @@ module.exports = {
         quantity : 9,
         weatherId : 8,
         date : '2020-10-20 15:00:00',
+      },{
+        store_productionId : 42,
+        quantity : 3,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 43,
+        quantity : 5,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 44,
+        quantity : 12,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 45,
+        quantity : 80,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 46,
+        quantity :34,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 47,
+        quantity : 75,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 48,
+        quantity : 32,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 49,
+        quantity : 68,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 50,
+        quantity : 23,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 51,
+        quantity : 89,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 52,
+        quantity : 56,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 53,
+        quantity : 23,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
+      },{
+        store_productionId : 54,
+        quantity : 19,
+        weatherId : 8,
+        date : '2020-10-27 21:00:00',
       }], 
     {});
   },
