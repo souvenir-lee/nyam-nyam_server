@@ -16,7 +16,4 @@ router.get("/signature/ingredient", trendController.signatureIngredient.get);
 router.get("/signature/ingredient/array", trendController.signatureIngredientArray.get);
 //인피니트 스크롤을 하게 되면 서버측에서는 그냥 다 보내주어도 괜찮은 것인가?
 
-//상세페이지
-router.get("/signature/info", trendController.signatureInfo.get);
-
 module.exports = router;
