@@ -1,5 +1,5 @@
 module.exports = {
-	post: async (req, res) => {
+	get: async (req, res) => {
 		const { store } = require('../../models');
 		const { production } = require('../../models');
 		const { store_production } = require('../../models');
@@ -7,6 +7,7 @@ module.exports = {
 		const dotenv = require('dotenv');
 		dotenv.config({ path: './.env' });
 
+		console.log(req.query)
 		if(req.body.storeId === undefined) return res.status(400).send('잘못된 요청입니다')
 
 		//날씨 요청
