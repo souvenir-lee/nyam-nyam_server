@@ -16,7 +16,7 @@ const tokenMiddleware = async (req, res, next) => {
         access_token,
         process.env.ACCESS_SECRET,
         {
-          expiresIn: '15m',
+          expiresIn: '100m',
           issuer: 'nyam-nyamServer',
         },
         (err, decode) => {

@@ -2,7 +2,7 @@ module.exports = {
   get: async (req, res) => {
     const { store } = require('../../models');
     if (req.body === undefined || req.body.userId === undefined) {
-      res.status(404).send('Bad Request');
+      res.status(400).send('Bad Request');
     }
     const findStore = await store.findAll({
       where: {

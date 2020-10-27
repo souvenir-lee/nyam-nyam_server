@@ -17,31 +17,31 @@ module.exports = {
 
     const login = (user) => {
       if (user) {
-        const access = 
-          jwt.sign(
-            { account: email, gmt: Date.now() },
-            process.env.ACCESS_SECRET,
-            {
-              //expiresIn: '1m',
-              expiresIn: '15m',
-              issuer: 'nyam-nyamServer',
-            })
-        const refresh = 
-          jwt.sign(
-            { account: email, gmt: Date.now() },
-            process.env.REFRESH_SECRET,
-            {
-              //expiresIn: '1m',
-              expiresIn: '10 days',
-              issuer: 'nyam-nyamServer',
-            })
+        const access = jwt.sign(
+          { account: email, gmt: Date.now() },
+          process.env.ACCESS_SECRET,
+          {
+            //expiresIn: '1m',
+            expiresIn: '100m',
+            issuer: 'nyam-nyamServer',
+          }
+        );
+        const refresh = jwt.sign(
+          { account: email, gmt: Date.now() },
+          process.env.REFRESH_SECRET,
+          {
+            //expiresIn: '1m',
+            expiresIn: '10 days',
+            issuer: 'nyam-nyamServer',
+          }
+        );
         const tokenGenerate = (access, refresh) => {
-          let obj = {}
-          obj['access_token'] = access
-          obj['refresh_token'] = refresh
-          return obj
-        }
-        return tokenGenerate(access, refresh)
+          let obj = {};
+          obj['access_token'] = access;
+          obj['refresh_token'] = refresh;
+          return obj;
+        };
+        return tokenGenerate(access, refresh);
       } else {
         console.log('user 정보가 없습니다');
         return res.status(404).send('user 정보가 없습니다');
@@ -51,7 +51,10 @@ module.exports = {
     const respond = (token) => {
       user
         .update(
-          { access_token: token.access_token, refresh_token: token.refresh_token },
+          {
+            access_token: token.access_token,
+            refresh_token: token.refresh_token,
+          },
           { where: { email: email } }
         )
         .then(() => {
@@ -61,29 +64,29 @@ module.exports = {
               where: { email: email },
             })
             .then(async (userdata) => {
-              let { id } = userdata
-              console.log(id)
+              let { id } = userdata;
+              console.log(id);
 
               //store 정보 받기
-              let storedata = 
-                await store.findAll({
+              let storedata = await store
+                .findAll({
                   attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
-                  where : { userId : id}
+                  where: { userId: id },
                 })
-                .then(data => {
-                  let result = []
-                  let storeArr = data.map(e => {
-                    result = e.dataValues
-                    return result
-                  })
-                  return storeArr
+                .then((data) => {
+                  let result = [];
+                  let storeArr = data.map((e) => {
+                    result = e.dataValues;
+                    return result;
+                  });
+                  return storeArr;
                 })
-                .catch(err => console.log(err))
+                .catch((err) => console.log(err));
 
               return res.json({
                 message: 'logged in successfully',
                 userdata,
-                storedata
+                storedata,
               });
             })
             .catch((err) => console.log(err));
@@ -98,8 +101,8 @@ module.exports = {
       .then(login)
       .then(respond)
       .catch((err) => {
-        console.log('login error', err)
-        return res.status(500).json({'login error': err})
+        console.log('login error', err);
+        return res.status(500).json({ 'login error': err });
       });
   },
 };
