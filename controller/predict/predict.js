@@ -8,7 +8,7 @@ module.exports = {
 		dotenv.config({ path: './.env' });
 
 		console.log(req.query)
-		if(req.body.storeId === undefined) return res.status(400).send('잘못된 요청입니다')
+		if(req.query.storeId === undefined) return res.status(400).send('잘못된 요청입니다')
 
 		//날씨 요청
 		// const weatherURL = (lat, lon) => {
@@ -31,7 +31,7 @@ module.exports = {
 		//store 2에서 파는 물품들
 		let salesProduction = 
 			await store_production.findAll({ 
-				where: { storeId : req.body.storeId},
+				where: { storeId : req.query.storeId},
 				include : [production],
 				attributes : ['id'],
 			});
@@ -83,7 +83,7 @@ module.exports = {
 						return result
 					})								
 				return res.json({
-					"storeId" : req.body.storeId,
+					"storeId" : req.query.storeId,
 					quantityData
 				})
 			})
