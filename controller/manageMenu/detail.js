@@ -9,18 +9,19 @@ module.exports = {
         attributes : ['storeId'],
         where : { productionId : req.params.id }
       })
-    const id = await 
+    const storeData = await 
       store.findOne({
-        attributes : ['userId'],
+        attributes : ['userId', 'storeName'],
         where : { id : storeId.dataValues.storeId }
       })
     const productionData = 
       await production.findOne({where : { id : req.params.id }})
       .catch(err => res.status(500).send(err))
 
-    const { userId } =id
+    const { userId, storeName } =storeData
     return res.status(200).json({
       userId, 
+      storeName : storeName,
       'productionData' : productionData.dataValues
     })
   },
