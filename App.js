@@ -7,8 +7,8 @@ const session = require('express-session');
 const cors = require('cors');
 
 const authMiddleware = require('./middleware/auth');
-const tokenMiddleware =require('./middleware/token')
-const checkTokenMiddleware =require('./middleware/autoLogin')
+const tokenMiddleware = require('./middleware/token');
+const checkTokenMiddleware = require('./middleware/autoLogin');
 const usersRouter = require('./routes/users');
 const socialRouter = require('./routes/social');
 const searchRouter = require('./routes/search');
@@ -53,13 +53,12 @@ app.use(
   })
 );
 
-
 app.use('/users', usersRouter);
 app.use('/social', socialRouter);
 
 //app.use('*', authMiddleware);
-app.use('/token', tokenMiddleware)
-app.use('/autologin', authMiddleware, checkTokenMiddleware)
+app.use('/token', tokenMiddleware);
+app.use('/autologin', authMiddleware, checkTokenMiddleware);
 
 app.use('/search', authMiddleware, searchRouter);
 app.use('/predict', authMiddleware, predictRouter);
@@ -70,8 +69,8 @@ app.use('/managemenu', manageMenuRouter);
 app.use('/managestore', authMiddleware, manageStoreRouter);
 app.use('/update', authMiddleware, updateSalesRouter);
 
-app.listen(4000, () => {
-  console.log('server on 4000');
+app.listen(8081, () => {
+  console.log('server on 8081');
 });
 
 module.exports = app;

@@ -32,7 +32,7 @@ module.exports = {
       })
       .then((result) => {
         if (result) {
-          return res.send(200).send('가게가 삭제되었습니다.');
+          return res.send(200).send('삭제되었습니다.');
         } else {
           return res.status(400).send('Bad Request');
         }

@@ -52,7 +52,7 @@ module.exports = {
     if (addPro || joinS_P || joinP_I) {
       res.status(201).send('추가되었습니다');
     } else {
-      res.status(404).send('BadRequest');
+      res.status(400).send('BadRequest');
     }
   },
 };
