@@ -1,26 +1,35 @@
 module.exports = {
-	post: (req, res) => {
+	post: async(req, res) => {
 		const { user } = require('../../models')
-		if((!req.body.userId || !req.body.currentPassword) || !req.body.password){
+		const jwt = require('jsonwebtoken');
+		const access_token = req.headers['x-access-token'];
+		
+		if((!req.body.currentPassword) || !req.body.password){
 			return res.status(400).send('Invalid Request')
 		}
 		console.log('edit',req.body)
 		const {
-			userId,
 			currentPassword,
 			password
 		} = req.body
 
+    const decoded = jwt.decode(access_token, { complete: true });
+    const account = decoded.payload.account;
+    const id = await user.findOne({
+      where : { email : account},
+      attributes: ['id']
+		})
+
 		const userData = 
 			user.findOne({
-				where : { id : userId, password : currentPassword }
+				where : { id : id.dataValues.id, password : currentPassword }
 			})
 			.then(data => {
 				if(!data) return res.status(404).send('기존의 비밀번호를 확인해주세요')
 			})
 
 		const updateData =
-			user.update({ password : password }, { where : { id : userId, password : currentPassword }})
+			user.update({ password : password }, { where : { id : id.dataValues.id, password : currentPassword }})
 				.then(() => res.status(201).send('비밀번호가 수정되었습니다.'))
 				.catch(err => {
 					console.log(err)

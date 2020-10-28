@@ -8,13 +8,35 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      store_productionId: {
+      // store_productionId: {
+      //   type: Sequelize.INTEGER,
+      //   constraints: false,
+      //   onDelete: 'cascade',
+      //   references: {
+      //     model: {
+      //       tableName: 'store_productions',
+      //     },
+      //     key: 'id',
+      //   },
+      // },
+      storeId: {
         type: Sequelize.INTEGER,
         constraints: false,
         onDelete: 'cascade',
         references: {
           model: {
-            tableName: 'store_productions',
+            tableName: 'stores',
+          },
+          key: 'id',
+        },
+      },
+      productionId: {
+        type: Sequelize.INTEGER,
+        constraints: false,
+        onDelete: 'cascade',
+        references: {
+          model: {
+            tableName: 'productions',
           },
           key: 'id',
         },

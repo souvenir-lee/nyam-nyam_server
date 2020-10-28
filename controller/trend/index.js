@@ -7,6 +7,5 @@ module.exports = {
     signatureDessertTypeArray: require('./signatureDessertTypeArray'),
     signatureIngredient: require('./signatureIngredient'),
     signatureIngredientArray: require('./signatureIngredientArray'),
-    signatureInfo: require('./signatureInfo'),
 };
   
