@@ -63,10 +63,10 @@ app.use('/autologin', authMiddleware, checkTokenMiddleware)
 
 app.use('/search', authMiddleware, searchRouter);
 app.use('/predict', authMiddleware, predictRouter);
-app.use('/trend', authMiddleware, trendRouter);
+app.use('/trend', trendRouter);
 app.use('/info', authMiddleware, infoRouter);
 app.use('/editinfo', authMiddleware, editInfoRouter);
-app.use('/managemenu', authMiddleware, manageMenuRouter);
+app.use('/managemenu', manageMenuRouter);
 app.use('/managestore', authMiddleware, manageStoreRouter);
 app.use('/update', authMiddleware, updateSalesRouter);
 

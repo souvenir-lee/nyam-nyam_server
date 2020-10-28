@@ -1,35 +1,18 @@
 module.exports = {
 	get: async (req, res) => {
-		const { store } = require('../../models');
-		const { production } = require('../../models');
-		const { store_production } = require('../../models');
-		const { production_quantity } = require('../../models');
+		const { production, store_production, production_quantity } = require('../../models');
 		const dotenv = require('dotenv');
 		dotenv.config({ path: './.env' });
 
 		console.log(req.query)
 		if(req.query.storeId === undefined) return res.status(400).send('잘못된 요청입니다')
-
-		//날씨 요청
-		// const weatherURL = (lat, lon) => {
-		// 	fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely,current&appid=${process.env.WEATHER_KEY}`)
-		// 		.then(res => res.json())
-		// 		.then(data => data)
-		// }	
 		
-		// let storeWeather =
-		// 	await store.findOne({
-		// 		where : { id : req.body.storeId},
-		// 		attributes : ['latitude','longitude']
-		// 	})
-		// 	.then(data => {
-		// 		let { latitude, longitude } = data
-		// 		weatherURL(latitude, longitude)
-		// 	})
-		
+		//한글을 인코딩 해주기
+		const weatherName = decodeURIComponent(req.query.weather)
+		console.log(weatherName)
 
 		//store 2에서 파는 물품들
-		let salesProduction = 
+		const salesProduction = 
 			await store_production.findAll({ 
 				where: { storeId : req.query.storeId},
 				include : [production],
@@ -40,7 +23,7 @@ module.exports = {
 		// }))
 
 		//물품들 아이디
-		let salesId	= 
+		const salesId	= 
 			salesProduction.map(e => {
 				let arr = []
 				arr.push(e.id)
@@ -49,7 +32,7 @@ module.exports = {
 			//console.log(salesId)
 
 		//각각의 양
-		let salesProductionQuantity = 
+		const salesProductionQuantity = 
 			await production_quantity.findAll({
 				where : { id : salesId },
 				attributes : { exclude : ["weatherId","createdAt","updatedAt"]},
@@ -74,9 +57,17 @@ module.exports = {
 				const quantityData = 
 					data.map(e => {
 						let result = []
+						let resultQuantity;
 						for(let i = 0; i < productionId.length ; i++){
 							if(productionId[i] === e.dataValues.id){
-								productionData[i]['production']['quantity'] = e.dataValues.quantity
+								if(weatherName === '맑음'){
+									resultQuantity = Math.round(e.dataValues.quantity * 1.8)
+								} else if((weatherName === '눈' || weatherName === '비') || weatherName === '소나기'){
+									resultQuantity =  Math.round(e.dataValues.quantity * 0.7)
+								} else {
+									resultQuantity =  e.dataValues.quantity
+								}
+								productionData[i]['production']['quantity'] = resultQuantity
 								result = productionData[i]
 							}
 						}
