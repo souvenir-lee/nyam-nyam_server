@@ -1,6 +1,6 @@
 module.exports = {
   post: async (req, res) => {
-    const { user, store_production, production, production_ingredient} = require('../../models');
+    const { user, store, store_production, production, production_ingredient} = require('../../models');
     const jwt = require('jsonwebtoken');
     const { storeId, productionId } = req.body;
     const access_token = req.headers['x-access-token']

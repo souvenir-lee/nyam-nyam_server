@@ -2,12 +2,11 @@ const {
   production,
   store_production,
   weather,
-  production_quantities,
+  production_quantity,
 } = require('../../models');
-
 module.exports = {
   get: async (req, res) => {
-    const storeId = req.params.storeId;
+    const { storeId } = req.body;
     const findProduction = await store_production.findAll({
       include: {
         model: production,
@@ -18,10 +17,9 @@ module.exports = {
     if (findProduction) {
       res.status(200).send(findProduction);
     } else {
-      res.status(404).send('Bad Request');
+      res.status(400).send('Bad Request');
     }
   },
-
   post: async (req, res) => {
     const { storeId, date, weatherName, sales } = req.body;
     const findId = await store_production.findAll({
@@ -32,17 +30,31 @@ module.exports = {
       attributes: ['id', 'name'],
       where: { name: weatherName },
     });
-    // const updateSales = await production_quantities.map((el) => {
-    //   store_quantity.create({
-    //     store_productionId: findId.dataValues.id,
-    //     date: date,
-    //     quantity: sales.quantity,
-    //     weatherId: findWeather.dataValues.id,
-    //   });
-    // });
-    res.status(201).send(findId);
-    console.log('fdsa', findId);
-    console.log('asdf', findWeather);
-    // console.log('슈량', sales);
+    for (let i = 0; i < findId.length; i++) {
+      await production_quantity.create({
+        store_productionId: findId[i].dataValues.id,
+        date: date,
+        quantity: sales[i].quantity,
+        weatherId: findWeather[0].dataValues.id,
+      });
+    }
+    const result = await production_quantity.findAll({
+      where: {
+        date: date,
+      },
+    });
+    // res.status(201).send('ok');
+    // console.log(
+    //   findId[0].dataValues.id,
+    //   findId[1].dataValues.id,
+    //   findId[2].dataValues.id,
+    //   findId[3].dataValues.id,
+    //   findId[4].dataValues.id
+    // );
+    if (findId || findWeather || date || quantity) {
+      res.status(201).send(result);
+    } else {
+      res.status(404).send('Bad Request');
+    }
   },
 };

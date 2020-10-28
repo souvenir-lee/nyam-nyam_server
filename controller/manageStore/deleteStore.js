@@ -1,4 +1,3 @@
-// const { store } = require('../../models');
 module.exports = {
   get: async (req, res) => {
     const { user, store } = require('../../models');

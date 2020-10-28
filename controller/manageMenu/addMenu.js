@@ -1,6 +1,6 @@
 module.exports = {
   post: async (req, res) => {
-    const { user, production, store_production, production_ingredient, ingredient } 
+    const { user, store, production, store_production, production_ingredient, ingredient } 
       = require('../../models');
       const jwt = require('jsonwebtoken');
     const { storeId, productionName, productionImg, ingredient1, ingredient2, price, info, dessertType,} 
