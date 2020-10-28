@@ -4,7 +4,6 @@ const {
   weather,
   production_quantity,
 } = require('../../models');
-
 module.exports = {
   get: async (req, res) => {
     const { storeId } = req.body;
@@ -21,7 +20,6 @@ module.exports = {
       res.status(400).send('Bad Request');
     }
   },
-
   post: async (req, res) => {
     const { storeId, date, weatherName, sales } = req.body;
     const findId = await store_production.findAll({
@@ -32,7 +30,6 @@ module.exports = {
       attributes: ['id', 'name'],
       where: { name: weatherName },
     });
-
     for (let i = 0; i < findId.length; i++) {
       await production_quantity.create({
         store_productionId: findId[i].dataValues.id,
@@ -54,7 +51,6 @@ module.exports = {
     //   findId[3].dataValues.id,
     //   findId[4].dataValues.id
     // );
-
     if (findId || findWeather || date || quantity) {
       res.status(201).send(result);
     } else {

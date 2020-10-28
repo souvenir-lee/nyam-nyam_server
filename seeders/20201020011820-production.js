@@ -210,6 +210,77 @@ module.exports = {
       info : "뚜레주르의 단팥빵",
       dessertType : 4,
       type :1,
+    },{ 
+      /********* 공통 추가  ***** ***/
+      productionName : "단팥빵",  //29
+      productionImg : "",
+      price : 1300,
+      info : "일반적인 단팥빵입니다",
+      dessertType : 4,
+      type :null,
+    },{
+      productionName : "피자빵",  //30
+      productionImg : "",
+      price : 1500,
+      info : "피자 치즈와 소세지가 들어있는 빵입니다.",
+      dessertType : 4,
+      type :null,
+    },{
+      productionName : "소보루빵",  //31
+      productionImg : "",
+      price : 1300,
+      info : "일반적인 소보루 빵",
+      dessertType : 4,
+      type :null,
+    },{
+      productionName : "샌드위치",  //32
+      productionImg : "",
+      price : 5000,
+      info : "일반적인 샌드위치",
+      dessertType : 4,
+      type :null,
+    },{
+      productionName : "소보루 단팥빵",  //33
+      productionImg : "",
+      price : 1800,
+      info : "단팥빵에 소보루가 얹어진 빵",
+      dessertType : 4,
+      type :null,
+    },{
+      productionName : "딸기잼빵",  //34
+      productionImg : "",
+      price : 1000,
+      info : "딸기쨈이 들어간 부드러운 빵",
+      dessertType : 4,
+      type :null,
+    },{
+      productionName : "초코칩 쿠키",  //35
+      productionImg : "",
+      price : 1000,
+      info : "일반적인 초코쿠키",
+      dessertType : 2,
+      type :null,
+    },{
+      productionName : "에그타르트",  //36
+      productionImg : "",
+      price : 1300,
+      info : "일반적인 에그타르트",
+      dessertType : 3,
+      type :null,
+    },{
+      productionName : "사과 마카롱",  //37
+      productionImg : "",
+      price : 1500,
+      info : "사과가 들어간 마카롱",
+      dessertType : 1,
+      type :null,
+    },{
+      productionName : "땅콩 마카롱",  //38
+      productionImg : "",
+      price : 1500,
+      info : "땅콩 버터가 들어간 마카롱",
+      dessertType : 1,
+      type :null,
     }], 
     {});
   },

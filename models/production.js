@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         through: 'production_ingredient',
         foreignKey: 'productionId',
       }); //N:M 한 상품에 여러 재료, 한 재료가 여러 상품에
+      this.hasMany(models.production_quantity, { foreignKey: 'productionId' });
     }
   }
   production.init(

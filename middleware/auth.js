@@ -35,7 +35,6 @@ const authMiddleware = (req, res, next) => {
       return res
         .status(401)
         .json({ 'access token이 만료되었습니다': error.message });
-      //tokenMiddleware(req, res, next);
     } else {
       return res
         .status(403)
@@ -50,14 +49,8 @@ const authMiddleware = (req, res, next) => {
     })
     .then((data) => {
       if (data) {
-        let { social } = data;
-        console.log('auth data', social);
-        if (social === 'kakao') {
-          return;
-        } else {
-          console.log('auth 로컬');
-          checkToken();
-        }
+        console.log('auth 로컬');
+        checkToken();
       } else {
         return res
           .status(404)

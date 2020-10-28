@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         through: 'store_production',
         foreignKey: 'storeId',
       }); //N:M 한 스토어에 여러 상품, 한 상품이 여러 가게에
+      this.hasMany(models.production_quantity, { foreignKey: 'storeId' });
     }
   }
   store.init(

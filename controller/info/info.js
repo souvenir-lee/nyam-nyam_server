@@ -5,7 +5,6 @@ const {
   production_quantity,
   store_production,
 } = require('../../models');
-
 module.exports = {
   get: async (req, res) => {
     const { userId } = req.body;
@@ -13,7 +12,6 @@ module.exports = {
       attributes: ['username', 'userImg'],
       where: { id: userId },
     }); //user
-
     const findStore = await store.findAndCountAll({
       attributes: ['id'],
       where: {
@@ -29,7 +27,6 @@ module.exports = {
         },
       });
       productions.push(findProduction);
-
       const findUpload = store_production.findAndCountAll({
         include: {
           model: production_quantity,
