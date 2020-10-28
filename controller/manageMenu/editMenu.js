@@ -3,7 +3,6 @@ const {
   production,
   production_ingredient,
   ingredient,
-  store_production,
 } = require('../../models');
 module.exports = {
   get: async (req, res) => {
@@ -52,14 +51,12 @@ module.exports = {
         }
       }
     } else {
-      res.status(404).send('Bad Request');
+      res.status(400).send('Bad Request');
     }
   },
 
   post: async (req, res) => {
     const {
-      storeId,
-      userId,
       productionId,
       productionName,
       productionImg,
@@ -67,7 +64,6 @@ module.exports = {
       ingredient1,
       ingredient2,
       info,
-      storeName,
       dessertType,
       type,
     } = req.body;
@@ -100,7 +96,7 @@ module.exports = {
         res.status(201).send('수정되었습니다');
       }
     } else {
-      res.status(404).send('Bad Request');
+      res.status(400).send('Bad Request');
     }
   },
 };

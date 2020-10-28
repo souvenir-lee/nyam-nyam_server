@@ -1,7 +1,7 @@
 module.exports = {
   get: async (req, res) => {
     const { store_production, production } = require('../../models');
-    const { userId, storeId, storeName } = req.body;
+    const { storeId } = req.body;
 
     // if (req.body === undefined || req.body.userId === undefined||req.body.storeId===undefined||req.body.storeName===undefined) {
     // res.status(404).send('Bad Request');
@@ -17,7 +17,7 @@ module.exports = {
     if (menuList) {
       res.status(200).send(menuList);
     } else {
-      res.status(404).send('Bad Request');
+      res.status(400).send('Bad Request');
     }
   },
 };

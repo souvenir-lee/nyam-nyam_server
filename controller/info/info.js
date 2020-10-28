@@ -19,16 +19,29 @@ module.exports = {
       where: {
         userId: userId,
       },
-    }); //store
-    // const findProduction = await production.findAndCountAll({
-    //   where:{
-    //     storeId : findStore.rows.
-    //   }
-    // })
-    //storeId를 map으로돌려 해당 productiondl 몇개인지 계산한다
-    const findUploads = await production_quantity.findAndCountAll({});
-    //store_production에서 storeId를 통해 Id를 알아낸다
-    res.status(200).send(findStore);
-    console.log('이거 없어?', findStore.rows[0].dataValues.id);
+    }); //findStore.rows.length
+    const productions = [];
+    for (let i = 0; i < findStore.rows.length; i++) {
+      const findProduction = await store_production.findAndCountAll({
+        attributes: ['id'],
+        where: {
+          storeId: findStore.rows[i].dataValues.id,
+        },
+      });
+      productions.push(findProduction);
+
+      const findUpload = store_production.findAndCountAll({
+        include: {
+          model: production_quantity,
+          attributes: ['id'],
+        },
+        where: {
+          storeId: findProduction.rows,
+        },
+      });
+    }
+    res.status(200).send(productions);
+    console.log('길이', findProduction.rows[0].dataValues.id);
+    console.log('asdfasdfa', findStore.rows);
   },
 };
