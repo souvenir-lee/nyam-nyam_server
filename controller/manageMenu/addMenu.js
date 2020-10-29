@@ -13,13 +13,15 @@ module.exports = {
     const decoded = jwt.decode(access_token, { complete: true });
     const account = decoded.payload.account;
     const id = await user.findOne({
-      where : { email : account},
-      attributes: ['id']
-    })
-    const checkStore = await store.findOne({where : { id : storeId, userId : id.dataValues.id}})
-    console.log(id.dataValues.id, checkStore)
-    if(!checkStore) return res.status(404).json('해당 매장은 접근 권한이 없습니다')
-
+      where: { email: account },
+      attributes: ['id'],
+    });
+    const checkStore = await store.findOne({
+      where: { id: storeId, userId: id.dataValues.id },
+    });
+    console.log(id.dataValues.id, checkStore);
+    if (!checkStore)
+      return res.status(404).json('해당 매장은 접근 권한이 없습니다');
     //본래 기능 시작
     const addPro = await production.create({
       productionName: productionName,
@@ -42,7 +44,6 @@ module.exports = {
       productionId: addPro.dataValues.id,
       ingredientId: ingredient1
     }); //메뉴와 주재료 연결
-
     if (ingredient2) {
       await production_ingredient.create({
         productionId: addPro.dataValues.id,
@@ -50,7 +51,6 @@ module.exports = {
       });
     }
     console.log('productionId', addPro.dataValues.id);
-
     if (addPro || joinS_P || joinP_I) {
       res.status(201).send('추가되었습니다');
     } else {

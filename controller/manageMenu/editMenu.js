@@ -8,7 +8,6 @@ module.exports = {
       production,
       production_ingredient,
       ingredient,
-      store_production,
     } = require('../../models');
     const jwt = require('jsonwebtoken');
     const access_token = req.headers['x-access-token'];
