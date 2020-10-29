@@ -2,7 +2,6 @@ const axios = require('axios');
 axios.defaults.withCredentials = true;
 const { user } = require('../../models');
 const qs = require('qs');
-const dotenv = require('dotenv');
 require('dotenv').config();
 const session = require('express-session');
 

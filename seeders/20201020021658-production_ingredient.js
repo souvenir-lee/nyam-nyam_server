@@ -96,6 +96,39 @@ module.exports = {
       },{
         productionId:28, //W 단팥빵
         ingredientId:25, //11 12
+      },{ /************** 공통 두번째 *************/
+        productionId:29, //단팥빵
+        ingredientId:25,
+      },{
+        productionId:30, //피자빵
+        ingredientId:11, //11 12
+      },{ 
+        productionId:31, //소보루빵
+        ingredientId:26,
+      },{
+        productionId:32, //샌드위치
+        ingredientId:18, //11 12
+      },{ 
+        productionId:33, //소보루 단팥빵
+        ingredientId:26,
+      },{ 
+        productionId:33, //소보루 단팥빵
+        ingredientId:25,
+      },{
+        productionId:34, //딸기잼빵
+        ingredientId:4, //11 12
+      },{ 
+        productionId:35, //초코칩 쿠키
+        ingredientId:1,
+      },{
+        productionId:36, //에그타르트
+        ingredientId:21, //11 12
+      },{ 
+        productionId:37, //사과마카롱
+        ingredientId:22,
+      },{
+        productionId:38, //땅콩 마카롱
+        ingredientId:9, //11 12
       }], 
     {});
   },

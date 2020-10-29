@@ -1,12 +1,33 @@
-const {
-  store,
-  production,
-  production_ingredient,
-  ingredient,
-} = require('../../models');
 module.exports = {
   get: async (req, res) => {
-    const { storeId, productionId } = req.body;
+    const storeId = req.query.storeId;
+    const productionId = req.query.productionId;
+    const {
+      user,
+      store,
+      production,
+      production_ingredient,
+      ingredient,
+    } = require('../../models');
+    const jwt = require('jsonwebtoken');
+    const access_token = req.headers['x-access-token'];
+
+    console.log(req.query); //storeId, productionId
+
+    //해당 유저만 접근할 수 있도록 하기
+    const decoded = jwt.decode(access_token, { complete: true });
+    const account = decoded.payload.account;
+    const id = await user.findOne({
+      where: { email: account },
+      attributes: ['id'],
+    });
+    const checkStore = await store.findOne({
+      where: { id: storeId, userId: id.dataValues.id },
+    });
+    if (!checkStore)
+      return res.status(404).json('해당 매장은 접근 권한이 없습니다');
+
+    //기존 기능 시작
     const storeInfo = await store.findOne({
       where: { id: storeId },
     });
@@ -67,36 +88,39 @@ module.exports = {
       dessertType,
       type,
     } = req.body;
-
-    const editMenu = await production.update(
-      {
-        productionName: productionName,
-        productionImg: productionImg,
-        price: price,
-        info: info,
-        dessertType: dessertType,
-        type: type,
-      },
-      { where: { id: productionId } }
-    );
-    const editIngredient = await production_ingredient.update(
-      {
-        ingredientId: ingredient1,
-      },
-      { where: { productionId: productionId } }
-    );
-    if (ingredient2) {
-      production_ingredient.create({
-        productionId: productionId,
-        ingredientId: ingredient2,
-      });
-    }
-    if (editMenu) {
-      if (editIngredient) {
-        res.status(201).send('수정되었습니다');
+    try {
+      const editMenu = await production.update(
+        {
+          productionName: productionName,
+          productionImg: productionImg,
+          price: price,
+          info: info,
+          dessertType: dessertType,
+          type: type,
+        },
+        { where: { id: productionId } }
+      );
+      const editIngredient = await production_ingredient.update(
+        {
+          ingredientId: ingredient1,
+        },
+        { where: { productionId: productionId } }
+      );
+      if (ingredient2) {
+        production_ingredient.create({
+          productionId: productionId,
+          ingredientId: ingredient2,
+        });
       }
-    } else {
-      res.status(400).send('Bad Request');
+      if (editMenu) {
+        if (editIngredient) {
+          res.status(201).send('수정되었습니다');
+        }
+      } else {
+        res.status(400).send('Bad Request');
+      }
+    } catch (e) {
+      res.status(500).send('err');
     }
   },
 };

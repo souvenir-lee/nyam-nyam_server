@@ -1,12 +1,19 @@
 module.exports = {
   get: async (req, res) => {
-    const { store } = require('../../models');
-    if (req.body === undefined || req.body.userId === undefined) {
-      res.status(400).send('Bad Request');
-    }
+    const { user, store } = require('../../models');
+    const jwt = require('jsonwebtoken');
+    const access_token = req.headers['x-access-token'];
+
+    const decoded = jwt.decode(access_token, { complete: true });
+    const account = decoded.payload.account;
+    const id = await user.findOne({
+      where: { email: account },
+      attributes: ['id'],
+    });
+
     const findStore = await store.findAll({
       where: {
-        userId: req.body.userId,
+        userId: id.dataValues.id,
       },
     });
     console.log('스토어', findStore);
