@@ -1,6 +1,6 @@
 module.exports = {
   get: async(req, res) => {
-    const { production, store_production, store } = require('../../models')
+    const { ingredient, production, store_production, store } = require('../../models')
     if(!req.params.id) return res.status(400).send('Bad Request')
     console.log(req.params)
 
@@ -11,16 +11,20 @@ module.exports = {
       })
     const storeData = await 
       store.findOne({
-        attributes : ['userId', 'storeName'],
+        attributes : ['id', 'userId', 'storeName'],
         where : { id : storeId.dataValues.storeId }
       })
     const productionData = 
-      await production.findOne({where : { id : req.params.id }})
+      await production.findOne({
+        where : { id : req.params.id },
+        include : [ingredient]
+      })
       .catch(err => res.status(500).send(err))
 
-    const { userId, storeName } =storeData
+    const { id, userId, storeName } =storeData
     return res.status(200).json({
       userId, 
+      storeId : id,
       storeName : storeName,
       'productionData' : productionData.dataValues
     })

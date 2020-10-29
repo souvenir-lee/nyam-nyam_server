@@ -6,6 +6,9 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.weather, {
         foreignKey: 'weatherId',
       }); //1:1
+      // this.belongsTo(models.store_production, {
+      //   foreignKey: 'store_productionId', //1:N 한 스토어에 여러 production_quantity
+      // });
       this.belongsTo(models.store, {
         foreignKey: 'storeId', //1:N 한 스토어에 여러 production_quantity
       });
@@ -47,3 +50,4 @@ module.exports = (sequelize, DataTypes) => {
   );
   return production_quantity;
 };
+
