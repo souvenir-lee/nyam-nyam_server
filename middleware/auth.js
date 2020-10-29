@@ -8,56 +8,60 @@ const authMiddleware = (req, res, next) => {
 
   // token does not exist
   if (!access_token) {
-    return res.status(404).json('잘못된 요청입니다. 토큰이 없거나 로그인 되지 않았습니다');
+    return res
+      .status(404)
+      .json('잘못된 요청입니다. 토큰이 없거나 로그인 되지 않았습니다');
   }
 
   // 토큰 만료 확인하기
   const checkToken = () => {
-    const access = 
-      jwt.verify(
-        access_token,
-        process.env.ACCESS_SECRET,
-        {
-          expiresIn: '30m', 
-          issuer: 'nyam-nyamServer',
-        })
+    const access = jwt.verify(access_token, process.env.ACCESS_SECRET, {
+      expiresIn: '100m',
+      issuer: 'nyam-nyamServer',
+    });
 
-    const token = (access) => { 
-      console.log('access 토큰유효성 검사를 하였습니다')
-      next()
-      //return 
-    }
-    token(access)
+    const token = (access) => {
+      console.log('access 토큰유효성 검사를 하였습니다');
+      //next()
+      return;
+    };
+    token(access);
   };
 
   const onError = (error) => {
-    console.log('여기인건가~~~~')
+    console.log('여기인건가~~~~');
     if (error.message === 'jwt expired') {
       console.log('auth error', error.message);
-      return res.status(401).json({'access token이 만료되었습니다' : error.message})
+      return res
+        .status(401)
+        .json({ 'access token이 만료되었습니다': error.message });
     } else {
-      return res.status(403).json({'access token 유효성 에러':error.message});
+      return res
+        .status(403)
+        .json({ 'access token 유효성 에러': error.message });
     }
   };
 
   //process the promise
-  user.findOne({
-    where: { access_token : access_token}
-  })
-    .then(data => {
-      if(data) {   
-        console.log('auth 로컬')  
-        checkToken()
-      } else{
-        return res.status(404).json('확인되지 않은 유저입니다. 토큰을 확인해주세요')
+  user
+    .findOne({
+      where: { access_token: access_token },
+    })
+    .then((data) => {
+      if (data) {
+        console.log('auth 로컬');
+        checkToken();
+      } else {
+        return res
+          .status(404)
+          .json('확인되지 않은 유저입니다. 토큰을 확인해주세요');
       }
     })
     .catch(onError)
-    //.then(next())
+    .then(next());
 };
 
 module.exports = authMiddleware;
-
 
 // 1) 클라이언트 측에서는 액세스 토큰만 보냄
 // 2) 서버측에서 액세스 토큰을 확인함

@@ -7,9 +7,9 @@ module.exports = {
     const decoded = jwt.decode(access_token, { complete: true });
     const account = decoded.payload.account;
     const id = await user.findOne({
-      where : { email : account},
-      attributes: ['id']
-    })
+      where: { email: account },
+      attributes: ['id'],
+    });
 
     const findStore = await store.findAll({
       where: {

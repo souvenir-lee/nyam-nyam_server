@@ -56,7 +56,7 @@ module.exports = {
             { account: user_data.kakao_account.email, gmt: Date.now() },
             process.env.ACCESS_SECRET,
             {
-              expiresIn: '15m',
+              expiresIn: '100m',
               issuer: 'nyam-nyamServer',
             }
           );

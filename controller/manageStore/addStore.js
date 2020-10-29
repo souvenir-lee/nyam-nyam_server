@@ -22,7 +22,7 @@ module.exports = {
       })
       .then((result) => {
         if (result) {
-          res.status(200).send('가게가 추가되었습니다. 축하합니다.');
+          res.status(200).send('추가되었습니다.');
         } else {
           res.status(400).send('Bad Request');
         }
