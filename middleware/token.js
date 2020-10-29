@@ -24,7 +24,10 @@ const tokenMiddleware = async (req, res, next) => {
             reject(err);
           } else {
             resolve(decode);
-            return res.status(200).json('access 문제없음');
+            return res.status(200).json({
+              message : 'access 문제없음',
+              access_token : access_token
+            });
           }
         }
       );

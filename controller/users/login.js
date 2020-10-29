@@ -96,13 +96,13 @@ module.exports = {
     user
       .findOne({
         attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
-        where: { email: email },
+        where: { email: email, password : password },
       })
       .then(login)
       .then(respond)
       .catch((err) => {
         console.log('login error', err);
-        return res.status(500).json({ 'login error': err });
+        return res.json({ 'login error': err });
       });
   },
 };

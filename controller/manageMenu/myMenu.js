@@ -30,7 +30,6 @@ module.exports = {
     const menuList = await store_production.findAll({
       include: {
         model: production,
-        attributes: ['productionName', 'price', 'info'],
       },
       where: {
         storeId: storeId,
