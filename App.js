@@ -69,8 +69,8 @@ app.use('/managemenu', manageMenuRouter);
 app.use('/managestore', authMiddleware, manageStoreRouter);
 app.use('/update', authMiddleware, updateSalesRouter);
 
-app.listen(8081, () => {
-  console.log('server on 8081');
+app.listen(4000, () => {
+  console.log('server on 4000');
 });
 
 module.exports = app;

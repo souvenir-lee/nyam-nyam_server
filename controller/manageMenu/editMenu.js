@@ -8,7 +8,6 @@ module.exports = {
       production,
       production_ingredient,
       ingredient,
-      store_production,
     } = require('../../models');
     const jwt = require('jsonwebtoken');
     const access_token = req.headers['x-access-token'];
@@ -89,36 +88,39 @@ module.exports = {
       dessertType,
       type,
     } = req.body;
-
-    const editMenu = await production.update(
-      {
-        productionName: productionName,
-        productionImg: productionImg,
-        price: price,
-        info: info,
-        dessertType: dessertType,
-        type: type,
-      },
-      { where: { id: productionId } }
-    );
-    const editIngredient = await production_ingredient.update(
-      {
-        ingredientId: ingredient1,
-      },
-      { where: { productionId: productionId } }
-    );
-    if (ingredient2) {
-      production_ingredient.create({
-        productionId: productionId,
-        ingredientId: ingredient2,
-      });
-    }
-    if (editMenu) {
-      if (editIngredient) {
-        res.status(201).send('수정되었습니다');
+    try {
+      const editMenu = await production.update(
+        {
+          productionName: productionName,
+          productionImg: productionImg,
+          price: price,
+          info: info,
+          dessertType: dessertType,
+          type: type,
+        },
+        { where: { id: productionId } }
+      );
+      const editIngredient = await production_ingredient.update(
+        {
+          ingredientId: ingredient1,
+        },
+        { where: { productionId: productionId } }
+      );
+      if (ingredient2) {
+        production_ingredient.create({
+          productionId: productionId,
+          ingredientId: ingredient2,
+        });
       }
-    } else {
-      res.status(400).send('Bad Request');
+      if (editMenu) {
+        if (editIngredient) {
+          res.status(201).send('수정되었습니다');
+        }
+      } else {
+        res.status(400).send('Bad Request');
+      }
+    } catch (e) {
+      res.status(500).send('err');
     }
   },
 };
