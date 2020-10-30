@@ -3,7 +3,6 @@ dotenv.config({ path: './.env' });
 const morgan = require('morgan');
 const express = require('express');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const cors = require('cors');
 
 const authMiddleware = require('./middleware/auth');
@@ -37,20 +36,6 @@ app.use(
       'Authorization',
     ],
     credentials: true,
-  })
-);
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    rolling: true, // maxAge -> 갱신
-    saveUninitialized: true,
-    cookie: {
-      secure: false,
-      maxAge: 60000 * 30, // 30분간 세션 유지
-      // sameSite: 'lax',
-    },
   })
 );
 
