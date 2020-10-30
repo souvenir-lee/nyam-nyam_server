@@ -40,20 +40,6 @@ app.use(
   })
 );
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    rolling: true, // maxAge -> 갱신
-    saveUninitialized: true,
-    cookie: {
-      secure: false,
-      maxAge: 60000 * 30, // 30분간 세션 유지
-      // sameSite: 'lax',
-    },
-  })
-);
-
 app.use('/users', usersRouter);
 app.use('/social', socialRouter);
 
