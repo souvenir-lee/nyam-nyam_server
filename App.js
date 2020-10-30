@@ -39,7 +39,6 @@ app.use(
   })
 );
 
-
 app.use('/users', usersRouter);
 app.use('/social', socialRouter);
 
