@@ -21,40 +21,56 @@ module.exports = {
     }
   },
   post: async (req, res) => {
-    const { storeId, date, weatherName, sales } = req.body;
-    const findId = await store_production.findAll({
-      attributes: ['id'],
-      where: { storeId: storeId },
-    });
+    //console.log(req.body.data)
+    const { storeId } = req.body
+    const {
+      production,
+      store_production,
+      weather,
+      production_quantity,
+    } = require('../../models');
+
+    let weatherArr =[]
+    req.body.data.map(el => {
+      weatherArr.push(el.weatherName)
+      return weatherArr
+    })
+    console.log(weatherArr)
     const findWeather = await weather.findAll({
-      attributes: ['id', 'name'],
-      where: { name: weatherName },
+      where: { name: weatherArr },
     });
-    for (let i = 0; i < findId.length; i++) {
-      await production_quantity.create({
-        store_productionId: findId[i].dataValues.id,
-        date: date,
-        quantity: sales[i].quantity,
-        weatherId: findWeather[0].dataValues.id,
-      });
-    }
-    const result = await production_quantity.findAll({
-      where: {
-        date: date,
-      },
-    });
-    // res.status(201).send('ok');
-    // console.log(
-    //   findId[0].dataValues.id,
-    //   findId[1].dataValues.id,
-    //   findId[2].dataValues.id,
-    //   findId[3].dataValues.id,
-    //   findId[4].dataValues.id
-    // );
-    if (findId || findWeather || date || quantity) {
-      res.status(201).send(result);
+    console.log('밖',findWeather)
+
+    let test = req.body.data.map(async (el) => {
+      const { date, production } = el
+      
+      console.log('findWeather', el.weatherName, findWeather )
+      for (let i = 0; i < production.length; i++) {
+        await production_quantity.create({
+          productionId: production[i][0],
+          storeId : storeId,
+          date: date,
+          quantity: production[i][1],
+          weatherId: findWeather.dataValues.id,
+        }).catch(err => console.log('err',err))
+      }
+      // const result = await production_quantity.findAll({
+      //   where: {
+      //     date: date,
+      //   },
+      // });
+      if (findId || findWeather || date || quantity) {
+        return true
+      } else {
+        return false
+      }
+    })
+
+    if(test){
+      return res.status(201).send('내역이 반영되었습니다');
     } else {
-      res.status(404).send('Bad Request');
+      return res.status(404).send('Bad Request');
     }
+    
   },
 };
