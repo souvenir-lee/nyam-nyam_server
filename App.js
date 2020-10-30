@@ -3,7 +3,6 @@ dotenv.config({ path: './.env' });
 const morgan = require('morgan');
 const express = require('express');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const cors = require('cors');
 
 const authMiddleware = require('./middleware/auth');
