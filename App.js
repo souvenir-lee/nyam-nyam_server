@@ -19,6 +19,7 @@ const editInfoRouter = require('./routes/editInfo');
 const manageMenuRouter = require('./routes/manageMenu');
 const manageStoreRouter = require('./routes/manageStore');
 const updateSalesRouter = require('./routes/updateSales');
+const manageMenuController = require('./controller/manageMenu');
 
 const app = express();
 app.use(morgan('nyamnyam'));
@@ -39,20 +40,6 @@ app.use(
   })
 );
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    rolling: true, // maxAge -> 갱신
-    saveUninitialized: true,
-    cookie: {
-      secure: false,
-      maxAge: 60000 * 30, // 30분간 세션 유지
-      // sameSite: 'lax',
-    },
-  })
-);
-
 app.use('/users', usersRouter);
 app.use('/social', socialRouter);
 
@@ -65,9 +52,10 @@ app.use('/predict', authMiddleware, predictRouter);
 app.use('/trend', trendRouter);
 app.use('/info', authMiddleware, infoRouter);
 app.use('/editinfo', authMiddleware, editInfoRouter);
-app.use('/managemenu', manageMenuRouter);
+app.use('/managemenu', authMiddleware, manageMenuRouter);
 app.use('/managestore', authMiddleware, manageStoreRouter);
 app.use('/update', authMiddleware, updateSalesRouter);
+app.get('/detail/:id', manageMenuController.detail.get);
 
 app.listen(4000, () => {
   console.log('server on 4000');

@@ -1,9 +1,30 @@
 module.exports = {
-	get: (req, res) => {
+	get: async(req, res) => {
 		console.log('test')
+		const { user, store, ingredient, production, production_quantity } = 
+			require('../../models');
+
 		//주재료별로 필터링해서
-		//재료별 금주 판매량
-		//상품 사진, 주재료 이름, 평점, 카페이름
+		//판매량 많은순으로
+		let obj = {}
+		for(let i = 1; i <27; i++){
+			let quantity = await production_quantity.findAll({
+				attributes: ['quantity'],
+				order: [['quantity', 'DESC']],
+				include : {
+					model : production,
+					required : true,
+					where : { type : 1 },
+					include : {
+						model : ingredient,
+						where : { id : i },
+						required : true,
+					}
+				}
+			})
+			obj[i] = quantity
+		}
+		return res.json(obj)
 	}
 };
   

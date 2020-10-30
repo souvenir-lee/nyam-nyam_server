@@ -24,8 +24,8 @@ module.exports = {
 			user.findOne({
 				where : { id : id.dataValues.id, password : currentPassword }
 			})
-			.then(data => {
-				if(!data) return res.status(404).send('기존의 비밀번호를 확인해주세요')
+			.catch(err => {
+				return res.status(404).send('기존의 비밀번호를 확인해주세요', err)
 			})
 
 		const updateData =
