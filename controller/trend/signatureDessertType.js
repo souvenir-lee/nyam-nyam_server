@@ -15,11 +15,6 @@ module.exports = {
 			},
 		})
 
-		// let quantity0Sum = 
-		// await production_quantity.sum('quantity',{
-		// 	where : { productionId: quantity0id },
-		// })
-
 
 		return res.status(200).json(quantity0)
 	}

@@ -29,7 +29,7 @@ const authMiddleware = (req, res, next) => {
   };
 
   const onError = (error) => {
-    console.log('여기인건가~~~~');
+    console.log('여기인건가~~~~', error.message);
     if (error.message === 'jwt expired') {
       console.log('auth error', error.message);
       return res
