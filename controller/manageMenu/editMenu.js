@@ -98,7 +98,7 @@ module.exports = {
       info,
       dessertType,
       //type,
-    } = req.body.data;
+    } = req.body;
 
     const check = new Promise((resolve, reject) => {
       if (req.file === undefined) {
