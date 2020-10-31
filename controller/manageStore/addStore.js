@@ -8,9 +8,9 @@ module.exports = {
     const decoded = jwt.decode(access_token, { complete: true });
     const account = decoded.payload.account;
     const id = await user.findOne({
-      where : { email : account},
-      attributes: ['id']
-    })
+      where: { email: account },
+      attributes: ['id'],
+    });
 
     const createStore = await store
       .create({
@@ -22,7 +22,7 @@ module.exports = {
       })
       .then((result) => {
         if (result) {
-          res.status(200).send('추가되었습니다.');
+          res.status(200).send('가게가 추가되었습니다. 축하합니다.');
         } else {
           res.status(400).send('Bad Request');
         }
