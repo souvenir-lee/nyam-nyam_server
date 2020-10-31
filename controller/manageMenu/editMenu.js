@@ -54,6 +54,7 @@ module.exports = {
             res.status(200).send({
               storeName: storeInfo.dataValues.storeName,
               productionName: menuInfo.dataValues.productionName,
+              productionImg: menuInfo.dataValues.productionImg,
               price: menuInfo.dataValues.price,
               info: menuInfo.dataValues.info,
               ingredient1: ingredientInfo.dataValues.name,
@@ -65,6 +66,7 @@ module.exports = {
             res.status(200).send({
               storeName: storeInfo.dataValues.storeName,
               productionName: menuInfo.dataValues.productionName,
+              productionImg: menuInfo.dataValues.productionImg,
               price: menuInfo.dataValues.price,
               info: menuInfo.dataValues.info,
               ingredient1: ingredientInfo.dataValues.name,
@@ -81,7 +83,7 @@ module.exports = {
   },
 
   post: async (req, res) => {
-    console.log('edit', req.body.data, req.file);
+    console.log('edit', req.body, req.file);
     const {
       production,
       production_ingredient,
