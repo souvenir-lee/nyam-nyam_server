@@ -4,6 +4,7 @@ module.exports = {
 		const { store, production, store_production, production_ingredient, production_quantity } = 
 			require('../../models');
 
+		///여기는 공통이므로 같은 상품임에도 다른 가계서 파는 경우가 있음. 이에 대한 합계도 고려해야
 		let result = [];
 		//디저트 종류별 디저트 양
 		//일단 기간 상관없이 누적판매량만
