@@ -1,12 +1,7 @@
-const {
-  production,
-  store_production,
-  weather,
-  production_quantity,
-} = require('../../models');
+const { production, store_production } = require('../../models');
 module.exports = {
   get: async (req, res) => {
-    const { storeId } = req.body;
+    const { storeId } = req.params;
     const findProduction = await store_production.findAll({
       include: {
         model: production,
@@ -21,40 +16,36 @@ module.exports = {
     }
   },
   post: async (req, res) => {
-    const { storeId, date, weatherName, sales } = req.body;
-    const findId = await store_production.findAll({
-      attributes: ['id'],
-      where: { storeId: storeId },
+    const { storeId } = req.body;
+    const { production_quantity } = require('../../models');
+
+    const findFunc = req.body.data.map(async (el) => {
+      const { date, weatherId, production } = el;
+
+      console.log('findWeather', el.weatherId);
+      let quantity;
+      for (let i = 0; i < production.length; i++) {
+        quantity = await production_quantity
+          .create({
+            productionId: production[i][0],
+            storeId: storeId,
+            date: date,
+            quantity: production[i][1],
+            weatherId: weatherId, //실제로는 ID가 들어갈것
+          })
+          .catch((err) => console.log('err', err));
+      }
+      if (quantity) {
+        return true;
+      } else {
+        return false;
+      }
     });
-    const findWeather = await weather.findAll({
-      attributes: ['id', 'name'],
-      where: { name: weatherName },
-    });
-    for (let i = 0; i < findId.length; i++) {
-      await production_quantity.create({
-        store_productionId: findId[i].dataValues.id,
-        date: date,
-        quantity: sales[i].quantity,
-        weatherId: findWeather[0].dataValues.id,
-      });
-    }
-    const result = await production_quantity.findAll({
-      where: {
-        date: date,
-      },
-    });
-    // res.status(201).send('ok');
-    // console.log(
-    //   findId[0].dataValues.id,
-    //   findId[1].dataValues.id,
-    //   findId[2].dataValues.id,
-    //   findId[3].dataValues.id,
-    //   findId[4].dataValues.id
-    // );
-    if (findId || findWeather || date || quantity) {
-      res.status(201).send(result);
+
+    if (findFunc) {
+      return res.status(201).send('내역이 반영되었습니다');
     } else {
-      res.status(404).send('Bad Request');
+      return res.status(404).send('Bad Request');
     }
   },
 };

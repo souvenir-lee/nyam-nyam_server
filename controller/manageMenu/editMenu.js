@@ -54,19 +54,25 @@ module.exports = {
             res.status(200).send({
               storeName: storeInfo.dataValues.storeName,
               productionName: menuInfo.dataValues.productionName,
+              productionImg: menuInfo.dataValues.productionImg,
               price: menuInfo.dataValues.price,
               info: menuInfo.dataValues.info,
               ingredient1: ingredientInfo.dataValues.name,
               ingredient2: ingredientInfo2.dataValues.name,
+              dessertType: menuInfo.dataValues.dessertType,
+              type: menuInfo.dataValues.type,
             });
           } else {
             res.status(200).send({
               storeName: storeInfo.dataValues.storeName,
               productionName: menuInfo.dataValues.productionName,
+              productionImg: menuInfo.dataValues.productionImg,
               price: menuInfo.dataValues.price,
               info: menuInfo.dataValues.info,
               ingredient1: ingredientInfo.dataValues.name,
               ingredient2: null,
+              dessertType: menuInfo.dataValues.dessertType,
+              type: menuInfo.dataValues.type,
             });
           }
         }
@@ -77,7 +83,7 @@ module.exports = {
   },
 
   post: async (req, res) => {
-    console.log('edit',req.body.data, req.file)
+    console.log('edit', req.body, req.file);
     const {
       production,
       production_ingredient,
@@ -92,74 +98,90 @@ module.exports = {
       info,
       dessertType,
       //type,
-    } = req.body.data;
+    } = req.body;
 
-    const check = new Promise ((resolve, reject) => {
-      if(req.file === undefined){
+    const check = new Promise((resolve, reject) => {
+      if (req.file === undefined) {
         //이미지 파일이 없는 경우
-        resolve()
+        resolve();
       } else {
-        reject()
+        reject();
       }
-    })
+    });
 
     check
-    .then(async ()=> {
-      await production.update(
-        {
-          productionName: productionName,
-          price: price,
-          info: info,
-          dessertType: dessertType,
-          //type: type,
-        },
-        { where: { id: productionId } }
-      ).catch(err => console.log(err))
+      .then(async () => {
+        await production
+          .update(
+            {
+              productionName: productionName,
+              price: price,
+              info: info,
+              dessertType: dessertType,
+              //type: type,
+            },
+            { where: { id: productionId } }
+          )
+          .catch((err) => console.log(err));
 
-      await production_ingredient.destroy({
-          where: { productionId: productionId } 
-        }).catch(err => res.json({'destroy': err}))      
-      await production_ingredient.create({
-        productionId: productionId,
-        ingredientId: ingredient1,
-      }).catch(err => res.json({'ingre1': err}))  
-      if(ingredient2){
-        await production_ingredient.create({
-          productionId: productionId,
-          ingredientId: ingredient2,
-        }).catch(err => res.json({'ingre2': err}))
-      }          
+        await production_ingredient
+          .destroy({
+            where: { productionId: productionId },
+          })
+          .catch((err) => res.json({ destroy: err }));
+        await production_ingredient
+          .create({
+            productionId: productionId,
+            ingredientId: ingredient1,
+          })
+          .catch((err) => res.json({ ingre1: err }));
+        if (ingredient2) {
+          await production_ingredient
+            .create({
+              productionId: productionId,
+              ingredientId: ingredient2,
+            })
+            .catch((err) => res.json({ ingre2: err }));
+        }
 
-      return res.status(201).send('수정되었습니다');
-    })
-    .catch(async () => {
-      await production.update(
-        {
-          productionName: productionName,
-          productionImg: req.file.location,
-          price: price,
-          info: info,
-          dessertType: dessertType,
-          //type: type,
-        },
-        { where: { id: productionId } }
-      ).catch(err => console.log(err))
-      
-      await production_ingredient.destroy({
-        where: { productionId: productionId } 
-      }).catch(err => res.json({'destroy': err}))      
-      await production_ingredient.create({
-        productionId: productionId,
-        ingredientId: ingredient1,
-      }).catch(err => res.json({'ingre1': err}))      
-      if(ingredient2){
-        await production_ingredient.create({
-          productionId: productionId,
-          ingredientId: ingredient2,
-        }).catch(err => res.json({'ingre2': err}))
-      }        
+        return res.status(201).send('수정되었습니다');
+      })
+      .catch(async () => {
+        await production
+          .update(
+            {
+              productionName: productionName,
+              productionImg: req.file.location,
+              price: price,
+              info: info,
+              dessertType: dessertType,
+              //type: type,
+            },
+            { where: { id: productionId } }
+          )
+          .catch((err) => console.log(err));
 
-      return res.status(201).send('수정되었습니다');
-    })
+        await production_ingredient
+          .destroy({
+            where: { productionId: productionId },
+          })
+          .catch((err) => res.json({ destroy: err }));
+        await production_ingredient
+          .create({
+            productionId: productionId,
+            ingredientId: ingredient1,
+          })
+          .catch((err) => res.json({ ingre1: err }));
+        if (ingredient2) {
+          await production_ingredient
+            .create({
+              productionId: productionId,
+              ingredientId: ingredient2,
+            })
+            .catch((err) => res.json({ ingre2: err }));
+        }
+
+        return res.status(201).send('수정되었습니다');
+      });
   },
 };
