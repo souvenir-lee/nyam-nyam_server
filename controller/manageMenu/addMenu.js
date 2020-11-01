@@ -3,9 +3,9 @@ module.exports = {
     const { user, store, production, store_production, production_ingredient, ingredient } 
       = require('../../models');
     const jwt = require('jsonwebtoken');
-    console.log('add',req.body.data, req.file)
+    console.log('add',req.body, req.file)
     const { storeId, productionName, ingredient1, ingredient2, price, info, dessertType,} 
-      = req.body.data;
+      = req.body;
     const location = req.file.location
     const access_token = req.headers['x-access-token']
   
