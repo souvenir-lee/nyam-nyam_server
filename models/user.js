@@ -46,6 +46,15 @@ module.exports = (sequelize, DataTypes) => {
             .digest('hex');
           data.password = hash;
         },
+        beforeBulkUpdate: (data, options) => {
+          let secret = process.env.USER_HOOK_SECRET;
+          let hash = crypto
+            .createHmac('sha256', secret)
+            .update(String(data.attributes.password))
+            .digest('hex');
+          console.log(hash);
+          data.attributes.password = hash;
+        },
         beforeFind: (data) => {
           if (data.where !== undefined && data.where.password) {
             let secret = process.env.USER_HOOK_SECRET;
