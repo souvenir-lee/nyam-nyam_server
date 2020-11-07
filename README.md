@@ -2,7 +2,7 @@
 
 CodeStates Immersive 22기 7조 growing 팀의 Final-Project 입니다.  
 Front - end : 이혁원, 임원동 | Back - end : 이한슬(팀장), 권수진    
-(client 측 레포는 https://github.com/codestates/nyamnyam-client 여기입니다)
+(client 측 레포는 [여기입니다](https://github.com/souvenir-lee/nyam-nyam_client))
 
 # Description
 
